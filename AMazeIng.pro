@@ -25,6 +25,17 @@ HEADERS += \
 FORMS += \
     mainwindow.ui
 
+INCLUDEPATH +=$$(OPENCV_DIR)\..\..\include
+
+LIBS += -L$$(OPENCV_DIR)\lib \
+        -lopencv_core420 \
+        -lopencv_highgui420 \
+        -lopencv_imgproc420 \
+        -lopencv_imgcodecs420 \
+        -lopencv_videoio420 \
+        -lopencv_features2d420 \
+        -lopencv_calib3d420
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
