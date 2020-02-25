@@ -9,14 +9,14 @@
 
 
 // Classe dediee a l'affichage d'une scene OpenGL
-class MyGLWidget : public QGLWidget
+class MazeWidget : public QGLWidget
 {
     Q_OBJECT
 
 public:
 
     // Constructeur
-    MyGLWidget(QWidget * parent = nullptr);
+    MazeWidget(QWidget * parent = nullptr);
 
 protected:
 

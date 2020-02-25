@@ -1,6 +1,6 @@
 #define _USE_MATH_DEFINES
 
-#include "myglwidget.h"
+#include "mazeWidget.h"
 #include <QApplication>
 #include <QDesktopWidget>
 #include <cmath>
@@ -14,7 +14,7 @@ const float MAX_DIMENSION     = 50.0f;
 
 
 // Constructeur
-MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
+MazeWidget::MazeWidget(QWidget * parent) : QGLWidget(parent)
 {
     // Reglage de la taille/position
     setFixedSize(WIN_WIDTH, WIN_HEIGHT);
@@ -32,7 +32,7 @@ MyGLWidget::MyGLWidget(QWidget * parent) : QGLWidget(parent)
 
 
 // Fonction d'initialisation
-void MyGLWidget::initializeGL()
+void MazeWidget::initializeGL()
 {
     // Reglage de la couleur de fond
     glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
@@ -55,7 +55,7 @@ void MyGLWidget::initializeGL()
 
 
 // Fonction de redimensionnement
-void MyGLWidget::resizeGL(int width, int height)
+void MazeWidget::resizeGL(int width, int height)
 {
     // Definition du viewport (zone d'affichage)
     glViewport(0, 0, width, height);
@@ -73,7 +73,7 @@ void MyGLWidget::resizeGL(int width, int height)
 
 
 // Fonction d'affichage
-void MyGLWidget::paintGL()
+void MazeWidget::paintGL()
 {
     // Reinitialisation des tampons
 
@@ -84,7 +84,7 @@ void MyGLWidget::paintGL()
 
 
 // Fonction de gestion d'interactions clavier
-void MyGLWidget::keyPressEvent(QKeyEvent * event)
+void MazeWidget::keyPressEvent(QKeyEvent * event)
 {
     switch(event->key())
     {

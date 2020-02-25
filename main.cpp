@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <ctime>
-#include "myglwidget.h"
+#include "mazeWidget.h"
+#include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,8 +12,8 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 	
 	// Creation du widget opengl
-    MyGLWidget glWidget;
-    glWidget.show();
+    MainWindow fenetre;
+    fenetre.show();
 
     // Execution de l'application QT
     return app.exec();
