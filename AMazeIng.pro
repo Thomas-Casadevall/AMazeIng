@@ -21,10 +21,12 @@ TARGET 	  = AMazeIng
 # fichiers sources/headers/ressources
 SOURCES += \
     main.cpp \
-    myglwidget.cpp
+    mainwindow.cpp \
+    mazeWidget.cpp
 
 HEADERS += \
-    myglwidget.h
+    mainwindow.h \
+    mazeWidget.h
 
 INCLUDEPATH +=$$(OPENCV_DIR)\..\..\include
 
@@ -36,3 +38,6 @@ LIBS += -L$$(OPENCV_DIR)\lib \
         -lopencv_videoio420 \
         -lopencv_features2d420 \
         -lopencv_calib3d420
+
+FORMS += \
+    mainwindow.ui
