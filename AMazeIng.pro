@@ -39,5 +39,8 @@ LIBS += -L$$(OPENCV_DIR)\lib \
         -lopencv_features2d420 \
         -lopencv_calib3d420
 
+
+
+
 FORMS += \
     mainwindow.ui
