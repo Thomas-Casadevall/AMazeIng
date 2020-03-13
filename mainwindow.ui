@@ -27,7 +27,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QOpenGLWidget" name="openGLWidget"/>
+    <widget class="MazeWidget" name="maze" native="true"/>
    </item>
    <item>
     <widget class="QWidget" name="opencvwidget" native="true">
@@ -51,6 +51,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MazeWidget</class>
+   <extends>QWidget</extends>
+   <header>mazewidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

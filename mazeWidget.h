@@ -5,7 +5,10 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QKeyEvent>
-#include <QTimer>
+#include <qopengl.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <QColor>
 
 
 // Classe dediee a l'affichage d'une scene OpenGL
@@ -33,9 +36,12 @@ protected:
     void keyPressEvent(QKeyEvent * event);
 
 private:
-    // Timer d'animation
-    float m_TimeElapsed { 0.0f };
-    QTimer m_AnimationTimer;
+
+
+
+public slots:
+    void updateView(char command);
+
 };
 
 #endif // MYGLWIDGET_H

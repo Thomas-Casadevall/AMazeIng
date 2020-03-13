@@ -5,6 +5,7 @@
 #include <QDesktopWidget>
 #include <cmath>
 #include <random>
+#include <QDebug>
 
 
 // Declarations des constantes
@@ -17,17 +18,12 @@ const float MAX_DIMENSION     = 50.0f;
 MazeWidget::MazeWidget(QWidget * parent) : QGLWidget(parent)
 {
     // Reglage de la taille/position
-    setFixedSize(WIN_WIDTH, WIN_HEIGHT);
-    move(QApplication::desktop()->screen()->rect().center() - rect().center());
+    //setFixedSize(WIN_WIDTH, WIN_HEIGHT);
+    //move(QApplication::desktop()->screen()->rect().center() - rect().center());
 
-    // Connexion du timer
-    connect(&m_AnimationTimer,  &QTimer::timeout, [&] {
-        m_TimeElapsed += 1.0f / 12.0f;
-        updateGL();
-    });
 
-    m_AnimationTimer.setInterval(10);
-    m_AnimationTimer.start();
+
+    qDebug()<<"constructeur";
 }
 
 
@@ -35,8 +31,8 @@ MazeWidget::MazeWidget(QWidget * parent) : QGLWidget(parent)
 void MazeWidget::initializeGL()
 {
     // Reglage de la couleur de fond
-    glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
-
+    glClearColor(0.1f, 1.0f, 0.1f, 0.0f);
+    qDebug()<<"constructeur2";
     // Activation du zbuffer
 
     // Distance par rapport au soleil, rayon, periode de rotation, periode de révolution
@@ -75,11 +71,14 @@ void MazeWidget::resizeGL(int width, int height)
 // Fonction d'affichage
 void MazeWidget::paintGL()
 {
-    // Reinitialisation des tampons
+    qDebug()<<"constructeur3";
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    // Definition de la matrice modelview
 
-    // Definition de la position de la camera
-
-    // Affichage des m_Planetes
+    glMatrixMode( GL_MODELVIEW ); // Bien veiller à sélectionner la matrice GL_PROJECTION
+    glLoadIdentity( );
+    gluLookAt(0, 0, -10, 0.0, 0.0, 0.0, 0.0, 1.0, 0);
+    qDebug()<<"constructeur4";
 }
 
 
@@ -91,10 +90,6 @@ void MazeWidget::keyPressEvent(QKeyEvent * event)
         // Activation/Arret de l'animation
         case Qt::Key_Enter:
         {
-            if(m_AnimationTimer.isActive())
-                m_AnimationTimer.stop();
-            else
-                m_AnimationTimer.start();
 
             break;
         }
@@ -117,4 +112,9 @@ void MazeWidget::keyPressEvent(QKeyEvent * event)
     // Acceptation de l'evenement et mise a jour de la scene
     event->accept();
     updateGL();
+}
+
+void MazeWidget::updateView(char command){
+
+
 }
