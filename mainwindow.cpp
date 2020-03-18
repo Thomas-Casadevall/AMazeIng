@@ -4,7 +4,7 @@
 //#include "QLabel"
 #include <QPixmap>
 
-#include "detectmotion.h"
+
 using namespace cv;
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),    ui(new Ui::MainWindow) {
@@ -12,13 +12,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setFixedSize(670,1050);
 
-
-    // Connexion du timer
-    connect(&timer,  &QTimer::timeout, this,    &MainWindow::updateCV);
-    timer.setInterval(500);
+    timer.setInterval(10);
     timer.start();
-    connect(this,  &MainWindow::updateGLWidget, ui->maze,    &MazeWidget::updateView);
+    // Connexion du timer à la MaJ d'OpenCV
+    connect(&timer,  &QTimer::timeout, this,    &MainWindow::updateCV);
 
+    connect(this,  &MainWindow::updateGLWidget, ui->maze,    &MazeWidget::updateView);
 
 
     // Camera setup
@@ -28,8 +27,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->imageLabel_->setText("L'image va bientôt s'afficher, veuillez patienter!");
 
 
-    //DetectMotion();
-
+    //
+     props = new Properties (webCam_);
 
 
 }
@@ -37,22 +36,26 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete webCam_;
+    delete props;
     delete ui;
 }
 
 
 void MainWindow::updateCV(){
 
-    if (webCam_->read(image)) {   // Capture a frame
+    if (webCam_->read(image1)) {   // Capture a frame
+
+        image2 = DetectMotion(webCam_,image1,*props);
         // Flip to get a mirror effect
-        flip(image,image,1);
+        // flip(image2,image2,1);
+
         // Invert Blue and Red color channels
-        cvtColor(image,image,COLOR_BGR2RGB);
+        cv::cvtColor(image2,image2,COLOR_BGR2RGB);
         // Convert to Qt image
 
 
 
-        QImage img= QImage((const unsigned char*)(image.data),image.cols,image.rows,QImage::Format_RGB888);
+        QImage img= QImage((const unsigned char*)(image2.data),image2.cols,image2.rows,QImage::Format_RGB888);
         //img.scaledToHeight(ui->imageLabel_->size().height());
         //img.scaledToWidth(ui->imageLabel_->size().width());
 

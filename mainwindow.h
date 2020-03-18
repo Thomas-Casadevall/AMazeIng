@@ -5,6 +5,7 @@
 #include "opencv2/opencv.hpp"
 #include <QTimer>
 //using namespace cv;
+#include "detectmotion.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,7 +18,9 @@ class MainWindow : public QWidget
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    cv::Mat image;
+    cv::Mat image2;
+    cv::Mat image1;
+
 private slots:
     void updateCV();
 signals:
@@ -38,6 +41,7 @@ private:
     // camera parameters
     int width;
     int height;
+    Properties * props;
 };
 
 #endif // MAINWINDOW_H
