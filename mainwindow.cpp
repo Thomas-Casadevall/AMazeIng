@@ -3,7 +3,8 @@
 //#include "QWidget"
 //#include "QLabel"
 #include <QPixmap>
-//#include "opencv2/opencv.hpp"
+
+#include "detectmotion.h"
 using namespace cv;
 MainWindow::MainWindow(QWidget *parent) :
     QWidget(parent),    ui(new Ui::MainWindow) {
@@ -15,10 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // Connexion du timer
     connect(&timer,  &QTimer::timeout, this,    &MainWindow::updateCV);
     timer.setInterval(10);
-    timer.start();
+    //timer.start();
     connect(this,  &MainWindow::updateGLWidget, ui->maze,    &MazeWidget::updateView);
-    timer.setInterval(10);
-    timer.start();
 
 
 
@@ -26,10 +25,10 @@ MainWindow::MainWindow(QWidget *parent) :
     webCam_ =new cv::VideoCapture(0);
     width = webCam_->get(CAP_PROP_FRAME_WIDTH);
     height= webCam_->get(CAP_PROP_FRAME_HEIGHT);
-    ui->imageLabel_->setText("zonedeTexte !");
+    ui->imageLabel_->setText("L'image va bientôt s'afficher, veuillez patienter!");
 
 
-
+    //DetectMotion();
 
 
 
