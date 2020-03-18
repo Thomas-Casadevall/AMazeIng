@@ -14,11 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Connexion du timer
     connect(&timer,  &QTimer::timeout, this,    &MainWindow::updateCV);
-    timer.setInterval(10);
+    timer.setInterval(500);
     timer.start();
     connect(this,  &MainWindow::updateGLWidget, ui->maze,    &MazeWidget::updateView);
-    timer.setInterval(10);
-    timer.start();
 
 
 
@@ -27,11 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
     width = webCam_->get(CAP_PROP_FRAME_WIDTH);
     height= webCam_->get(CAP_PROP_FRAME_HEIGHT);
     ui->imageLabel_->setText("zonedeTexte !");
-
-
-
-
-
 
 }
 
@@ -69,6 +62,10 @@ void MainWindow::updateCV(){
         ui->imageLabel_->setText("Error capturing the frame");
     }
 
+}
 
+void MainWindow::keyPressEvent(QKeyEvent * event){
+
+    ui->maze->keyPressEventCall(event);
 
 }

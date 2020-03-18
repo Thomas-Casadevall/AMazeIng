@@ -23,6 +23,9 @@ private slots:
 signals:
     void updateGLWidget(char a);
 
+protected:
+    // Fonction de gestion d'interactions clavier
+    void keyPressEvent(QKeyEvent * event);
 
 private:
     Ui::MainWindow *ui;

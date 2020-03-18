@@ -18,12 +18,10 @@ const float MAX_DIMENSION     = 50.0f;
 MazeWidget::MazeWidget(QWidget * parent) : QGLWidget(parent)
 {
     // Reglage de la taille/position
-    //setFixedSize(WIN_WIDTH, WIN_HEIGHT);
-    //move(QApplication::desktop()->screen()->rect().center() - rect().center());
-
-
-
-    qDebug()<<"constructeur";
+    width = WIN_WIDTH;
+    height = WIN_HEIGHT;
+    resize(WIN_WIDTH, WIN_HEIGHT);
+    move(QApplication::desktop()->screen()->rect().center() - rect().center());
 }
 
 
@@ -31,82 +29,114 @@ MazeWidget::MazeWidget(QWidget * parent) : QGLWidget(parent)
 void MazeWidget::initializeGL()
 {
     // Reglage de la couleur de fond
-    glClearColor(0.1f, 1.0f, 0.1f, 0.0f);
-    qDebug()<<"constructeur2";
+    glClearColor(0.0, 0.0, 0.0, 1.0); // Couleur à utiliser lorsqu’on va nettoyer la fenêtre ( = le fond)
+
     // Activation du zbuffer
+    glEnable(GL_DEPTH_TEST);
 
-    // Distance par rapport au soleil, rayon, periode de rotation, periode de révolution
-    // 0.0f, 5.0f, 0.0f, 0.0f               // Soleil
-    // 7.5f, 0.50f,  58.646f,   87.969f     // Mercure
-    // 10.0f, 0.90f, -243.018f, 224.701f    // Venus
-    // 13.0f, 0.90f, 0.997f,    365.256f    // Terre
-    // 17.5f, 1.50f, 1.025f,    686.960f    // Mars
-    // 27.0f, 3.00f, 0.413f,    935.354f    // Jupiter
-    // 35.0f, 2.50f, 0.448f,    1757.736f   // Saturne
-    // 40.5f, 1.50f, -0.718f,   3687.150f   // Uranus
-    // 45.0f, 1.50f, 0.671f,    6224.903f;  // Neptune
-
-    // Ajout des planetes dans le vecteur m_Planetes
 }
 
 
 // Fonction de redimensionnement
-void MazeWidget::resizeGL(int width, int height)
+void MazeWidget::resizeGL(int w, int h)
 {
     // Definition du viewport (zone d'affichage)
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, w, h);
 
-    // Definition de la matrice de projection
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    width = w;
+    height = h;
 
-    if(width != 0)
-        glOrtho(-MAX_DIMENSION, MAX_DIMENSION, -MAX_DIMENSION * height / static_cast<float>(width), MAX_DIMENSION * height / static_cast<float>(width), -MAX_DIMENSION * 2.0f, MAX_DIMENSION * 2.0f);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
 }
 
 
 // Fonction d'affichage
 void MazeWidget::paintGL()
 {
-    qDebug()<<"constructeur3";
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-    // Definition de la matrice modelview
+    // Reinitialisation des tampons
+    glClear(GL_COLOR_BUFFER_BIT); // Effacer le buffer de couleur
 
-    glMatrixMode( GL_MODELVIEW ); // Bien veiller à sélectionner la matrice GL_PROJECTION
-    glLoadIdentity( );
-    gluLookAt(0, 0, -10, 0.0, 0.0, 0.0, 0.0, 1.0, 0);
-    qDebug()<<"constructeur4";
+    glClear(GL_DEPTH_BUFFER_BIT); // clear le Z buffer
+
+    // Definition de la matrice modelview
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(80.0f, ((float)width)/height, 0.1f, 20.0f);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    gluLookAt(  pos_x, pos_y, pos_z,    // position de la caméra
+                10, 0, 10,  // position du point que fixe la caméra
+                0, 1, 0);   // vecteur vertical
+
+    glBegin(GL_QUADS);
+
+    glColor3ub(0, 0, 255); // Bleu
+    glVertex3f(1.0f, 1.0f, -1.0f);
+    glVertex3f(1.0f, -1.0f, -1.0f);
+    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glVertex3f(-1.0f, 1.0f, -1.0f);
+
+    glColor3ub(255, 0, 255); // Magenta
+    glVertex3f(1.0f, 1.0f, 1.0f);
+    glVertex3f(1.0f, -1.0f, 1.0f);
+    glVertex3f(-1.0f, -1.0f, 1.0f);
+    glVertex3f(-1.0f, 1.0f, 1.0f);
+
+    glColor3ub(255, 255, 0); // Jaune
+    glVertex3f(1.0f, 1.0f, 1.0f);
+    glVertex3f(1.0f, -1.0f, 1.0f);
+    glVertex3f(1.0f, -1.0f, -1.0f);
+    glVertex3f(1.0f, 1.0f, -1.0f);
+
+    glColor3ub(0, 255, 255); // Cyan
+    glVertex3f(-1.0f, 1.0f, 1.0f);
+    glVertex3f(-1.0f, -1.0f, 1.0f);
+    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glVertex3f(-1.0f, 1.0f, -1.0f);
+
+    glEnd();
+
 }
 
 
 // Fonction de gestion d'interactions clavier
-void MazeWidget::keyPressEvent(QKeyEvent * event)
+void MazeWidget::keyPressEventCall(QKeyEvent * event)
 {
     switch(event->key())
     {
-        // Activation/Arret de l'animation
+        // Rien
         case Qt::Key_Enter:
-        {
-
-            break;
-        }
+            qDebug()<<"enter";
+            majVue('f');
+        break;
 
         // Sortie de l'application
         case Qt::Key_Escape:
-        {
             exit(0);
-        }
+
+        case Qt::RightArrow:
+            majVue('r');
+        break;
+
+        case Qt::LeftArrow:
+            majVue('l');
+        break;
+
+        case Qt::DownArrow:
+            majVue('b');
+        break;
+
+        case Qt::UpArrow:
+            qDebug()<<"up";
+            majVue('f');
+        break;
 
         // Cas par defaut
         default:
-        {
             // Ignorer l'evenement
+            qDebug()<<"event ignoré";
             event->ignore();
             return;
-        }
     }
 
     // Acceptation de l'evenement et mise a jour de la scene
@@ -116,5 +146,58 @@ void MazeWidget::keyPressEvent(QKeyEvent * event)
 
 void MazeWidget::updateView(char command){
 
+    switch (command) {
+
+    case 'f':
+        pos_x += 0.1;
+        updateGL();
+    break;
+
+    case 'b':
+        pos_x -= 0.1;
+        updateGL();
+    break;
+
+    case 'l':
+        updateGL();
+    break;
+
+    case 'r':
+        updateGL();
+    break;
+
+    default:
+        qDebug() << "error";
+    break;
+    }
+
+}
+
+void MazeWidget::majVue(char command){
+
+    switch (command) {
+
+    case 'f':
+        pos_x += 0.1;
+        updateGL();
+    break;
+
+    case 'b':
+        pos_x -= 0.1;
+        updateGL();
+    break;
+
+    case 'l':
+        updateGL();
+    break;
+
+    case 'r':
+        updateGL();
+    break;
+
+    default:
+        qDebug() << "error";
+    break;
+    }
 
 }

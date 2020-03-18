@@ -21,6 +21,9 @@ public:
     // Constructeur
     MazeWidget(QWidget * parent = nullptr);
 
+    // Fonction de gestion d'interactions clavier
+    void keyPressEventCall(QKeyEvent * event);
+
 protected:
 
     // Fonction d'initialisation
@@ -32,12 +35,12 @@ protected:
     // Fonction d'affichage
     void paintGL();
 
-    // Fonction de gestion d'interactions clavier
-    void keyPressEvent(QKeyEvent * event);
-
+    //Fonction du labyrinthe
+    void majVue(char command);
 private:
 
-
+    int width, height;
+    float pos_x = 0, pos_y = 0, pos_z = 0;
 
 public slots:
     void updateView(char command);
