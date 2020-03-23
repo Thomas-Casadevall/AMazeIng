@@ -119,7 +119,9 @@ void MazeWidget::keyPressEventCall(QKeyEvent * event)
             // Ignorer l'evenement
             qDebug()<<"event ignoré";
             event->ignore();
-            return;
+        break;
+
+        return;
     }
 
     // Acceptation de l'evenement et mise a jour de la scene

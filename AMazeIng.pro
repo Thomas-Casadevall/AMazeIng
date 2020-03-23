@@ -47,7 +47,5 @@ LIBS += -L$$(OPENCV_DIR)\lib \
         -lopencv_objdetect420
 
 
-
-
 FORMS += \
     mainwindow.ui
