@@ -1,5 +1,7 @@
 #include "detectmotion.h"
 using namespace cv;
+
+
 Properties::Properties(cv::VideoCapture * webCam_){
 
 
@@ -14,6 +16,13 @@ Properties::Properties(cv::VideoCapture * webCam_){
 
     webCam_->set(CAP_PROP_FRAME_WIDTH,frameWidth);
     webCam_->set(CAP_PROP_FRAME_HEIGHT,frameHeight);
+
+
+    if( !face_cascade.load("../test/haarcascade_frontalface_alt.xml" ) )
+    {
+        std::cout<<"Error loading haarcascade"<<std::endl;
+    }
+    
 
 
 }
@@ -31,7 +40,7 @@ Mat DetectMotion(cv::VideoCapture * webCam_,Mat image1,Properties props)
     }
 */
 
-    Mat image2,frameRect1,frameRect2;
+    Mat image2, frame_gray , frameRect1 , frameRect2;
 
 
     // Get image1
@@ -55,9 +64,59 @@ Mat DetectMotion(cv::VideoCapture * webCam_,Mat image1,Properties props)
         webCam_->read(image2);
         // Mirror effect
         cv::flip(image2,image2,1);
+
+
+
         // Extract working rect in image2 and convert to gray
         cv::cvtColor(Mat(image2,props.workingRect),frameRect2,COLOR_BGR2GRAY);
 
+
+                //----------------------------------------------------//
+                //      Detection du visage sur l'image capturée      //
+                //----------------------------------------------------//
+
+        cv::cvtColor(image2,frame_gray,COLOR_BGR2GRAY);
+        // Equalize graylevels
+//        equalizeHist( frame_gray, frame_gray );
+        //-- Detect faces
+        std::vector<Rect> faces;
+        props.face_cascade.detectMultiScale( frame_gray, faces, 1.1, 4, 0, Size(60, 60) );
+        if (faces.size()>0)
+        {
+            // Draw green rectangle
+            for (int i=0;i<(int)faces.size();i++)
+                rectangle(image2,faces[i],Scalar(0,255,0),2);
+        }
+
+
+
+        // ///////////////////////////////
+
+
+        //----------------------------------------------------//
+        //          Match du visage sur l'image neutre        //
+        //----------------------------------------------------//
+
+        /*
+         // Test0 non adapté
+        // Extract template image in frame1
+        Mat templateImage(frameRect1,templateRect);
+        // Do the Matching between the working rect in frame2 and the templateImage in frame1
+        matchTemplate( frameRect2, templateImage, resultImage, TM_CCORR_NORMED );
+        // Localize the best match with minMaxLoc
+        double minVal; double maxVal; Point minLoc; Point maxLoc;
+        minMaxLoc( resultImage, &minVal, &maxVal, &minLoc, &maxLoc);
+        // Compute the translation vector between the origin and the matching rect
+        Point vect(maxLoc.x-templateRect.x,maxLoc.y-templateRect.y);
+
+        // Draw green rectangle and the translation vector
+        rectangle(frame2,workingRect,Scalar( 0, 255, 0),2);
+        Point p(workingCenter.x+vect.x,workingCenter.y+vect.y);
+        arrowedLine(frame2,workingCenter,p,Scalar(255,255,255),2);
+        */
+
+
+/*      // Test1
         // Extract template image in image1
         Mat templateImage(frameRect1,props.templateRect);
 
@@ -75,6 +134,8 @@ Mat DetectMotion(cv::VideoCapture * webCam_,Mat image1,Properties props)
         rectangle(image2,props.workingRect,Scalar( 0, 255, 0),2);
         Point p(props.workingCenter.x+vect.x,props.workingCenter.y+vect.y);
         arrowedLine(image2,props.workingCenter,p,Scalar(255,255,255),2);
+*/
+
 
         // Display image2
         //imshow("WebCam", image2);
@@ -89,6 +150,28 @@ Mat DetectMotion(cv::VideoCapture * webCam_,Mat image1,Properties props)
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
  *
