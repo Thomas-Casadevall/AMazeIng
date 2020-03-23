@@ -18,8 +18,11 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     cv::Mat image;
+
 private slots:
     void updateCV();
+    void quitter();
+
 signals:
     void updateGLWidget(char a);
 

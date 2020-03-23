@@ -3,6 +3,7 @@
 //#include "QWidget"
 //#include "QLabel"
 #include <QPixmap>
+#include <QDebug>
 
 #include "detectmotion.h"
 using namespace cv;
@@ -19,7 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     timer.start();
     connect(this,  &MainWindow::updateGLWidget, ui->maze,    &MazeWidget::updateView);
 
-
+    //connexion du exit
+    connect(ui->maze, &MazeWidget::onArrete, this,  &MainWindow::quitter);
 
     // Camera setup
     webCam_ =new cv::VideoCapture(0);
@@ -74,4 +76,8 @@ void MainWindow::keyPressEvent(QKeyEvent * event){
 
     ui->maze->keyPressEventCall(event);
 
+}
+
+void MainWindow::quitter(){
+    close();
 }
