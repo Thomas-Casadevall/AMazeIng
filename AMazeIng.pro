@@ -20,12 +20,16 @@ TARGET 	  = AMazeIng
 
 # fichiers sources/headers/ressources
 SOURCES += \
+    Maze/cell.cpp \
+    Maze/maze.cpp \
     detectmotion.cpp \
     main.cpp \
     mainwindow.cpp \
     mazeWidget.cpp
 
 HEADERS += \
+    Maze/cell.h \
+    Maze/maze.h \
     detectmotion.h \
     mainwindow.h \
     mazeWidget.h

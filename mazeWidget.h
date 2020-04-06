@@ -10,6 +10,9 @@
 #include <GL/glu.h>
 #include <QColor>
 
+#include <Maze/cell.h>
+#include <Maze/maze.h>
+
 
 // Classe dediee a l'affichage d'une scene OpenGL
 class MazeWidget : public QGLWidget
@@ -24,6 +27,15 @@ public:
     // Fonction de gestion d'interactions clavier
     void keyPressEventCall(QKeyEvent * event);
 
+    // Fonction du labyrinthe
+    void majVue(char command);
+
+    // debug
+    void drawCube();
+
+    double angle2x();
+    double angle2z();
+
 protected:
 
     // Fonction d'initialisation
@@ -35,15 +47,20 @@ protected:
     // Fonction d'affichage
     void paintGL();
 
-    //Fonction du labyrinthe
-    void majVue(char command);
 private:
 
     int width, height;
-    float pos_x = 0, pos_y = 0, pos_z = 0;
+    int angleVue = 0;
+    double pos_x = 0, pos_y = 0, pos_z = 0;
+
+    Maze laby;
 
 public slots:
+
     void updateView(char command);
+
+signals:
+    void onArrete();
 
 };
 
