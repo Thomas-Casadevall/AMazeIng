@@ -150,8 +150,8 @@ void Maze::generate(bool show)
         if (show) display(true);
     }
 
-    i_sphere = (rand() + 1) % height_;
-    j_sphere = (rand() + 1) % width_;
+    i_sphere = rand() % (height_ - 1) + 1; // (height_ - 1) + 1 pour éviter qu'elle soit en 0,0
+    j_sphere = rand() % (width_ - 1) + 1;
     qDebug() << "sphere";
     qDebug() << i_sphere;
     qDebug() << j_sphere;
@@ -161,6 +161,9 @@ void Maze::generate(bool show)
 
 void Maze::display3D(float l, float c){
 
+    GLfloat light_ambient[] = { 0.2, 0.2, 0.2 };
+    GLfloat light_diffuse[] = { 0.6, 0.6, 0.6 };
+    GLfloat light_emission[] = { 0.0, 0.0, 0.0 };
 
     for (int i=0;i<height_;i++) {
 
@@ -170,9 +173,6 @@ void Maze::display3D(float l, float c){
 
             glTranslated(i*c, 0, j*c);
 
-            GLfloat light_ambient[] = { 0.2, 0.2, 0.2 };
-            GLfloat light_diffuse[] = { 0.6, 0.6, 0.6 };
-            GLfloat light_emission[] = { 0.0, 0.0, 0.0 };
             glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_emission);
             glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, light_ambient);
             glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_diffuse);
@@ -183,6 +183,11 @@ void Maze::display3D(float l, float c){
         }
 
     }
+
+
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_emission);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, light_ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_diffuse);
 
 
     // Murs exté
@@ -298,6 +303,8 @@ void Maze::display2D(QPainter * dessinateur){
     }
 }
 
+
+
 void Maze::spheretrouve(){
 
     grid_[i_sphere][j_sphere].unsetSphere();
@@ -310,5 +317,16 @@ void Maze::spheretrouve(){
         j_sortie = (width_ - 1) * (rand() % 1);
         i_sortie = rand() % height_;
     }
+
+}
+
+
+void Maze::gestionPos(double pos_x, double pos_y){
+
+    // Sphere
+    if (pos_x > (i_sphere * 2 - 0.8) && pos_x < (i_sphere * 2 + 0.8) &&
+        pos_y > (j_sphere * 2 - 0.8) && pos_y < (j_sphere * 2 + 0.8)    )
+        spheretrouve();
+
 
 }

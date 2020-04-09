@@ -20,23 +20,25 @@ MainWindow::MainWindow(QWidget *parent) :
     timer.start();
 
     // Connexion du timer à la MaJ d'OpenCV
-    connect(&timer,  &QTimer::timeout, this,    [&]{ this->startMultiThreadProcess(mutx); });
+    //connect(&timer,  &QTimer::timeout, this,    [&]{ this->startMultiThreadProcess(mutx); });
 
     // Connexion du timer à la MaJ de MazeWidget
     connect(this,  &MainWindow::updateGLWidget, ui->maze,    &MazeWidget::updateView);
 
-
-    // Camera setup
-    webCam_ =new cv::VideoCapture(0);
-    width = webCam_->get(CAP_PROP_FRAME_WIDTH);
-    height= webCam_->get(CAP_PROP_FRAME_HEIGHT);
-    ui->imageLabel_->setText("L'image va bientôt s'afficher, veuillez patienter!");
-    ui->statutLabel_->setText("Démarrage...");
+    connect(ui->maze, &MazeWidget::onArrete, [&] {exit(0);});
 
 
-    //
-    props = new Properties (webCam_);
-    initCV();
+//    // Camera setup
+//    webCam_ =new cv::VideoCapture(0);
+//    width = webCam_->get(CAP_PROP_FRAME_WIDTH);
+//    height= webCam_->get(CAP_PROP_FRAME_HEIGHT);
+//    ui->imageLabel_->setText("L'image va bientôt s'afficher, veuillez patienter!");
+//    ui->statutLabel_->setText("Démarrage...");
+
+
+//    //
+//    props = new Properties (webCam_);
+//    initCV();
 
 }
 

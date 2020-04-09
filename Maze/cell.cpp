@@ -89,11 +89,15 @@ void Cell::display3D(float l, float c, bool ignore_S, bool ignore_E){
         glBindTexture(GL_TEXTURE_2D, texture); // On définit la texture courante
         gluQuadricTexture(quad, GL_TRUE); // On active les textures
 
-        GLfloat color[] = { 0.2, 0.0, 0.0 };
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, color);
+        GLfloat ambient[] = { 0.2, 0.0, 0.0 };
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+
+        GLfloat emission[] = { 0.2, 0.2, 0.2 };
+        glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
+
         GLfloat diffuse[] = { 0.0, 0.0, 0.0 };
         glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
-        glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
+
 
         gluQuadricDrawStyle(quad, GLU_FILL);
 
@@ -155,135 +159,11 @@ void Cell::setSphere(){
     quad = gluNewQuadric();
 
 
-//    glEnable(GL_LIGHT2); // Allume la 2ème lumière
-//    glDisable(GL_LIGHT2);
 }
 
 void Cell::unsetSphere(){
+
     sphere = 0;
     gluDeleteQuadric(quad);
-//    glDisable(GL_LIGHT2);
+
 }
-
-/*
-void Cell::display3D(){
-
-
-//    // texture
-//    if (texturation) {
-//        glBindTexture(GL_TEXTURE_2D, texture); // On définit la texture courante
-//        gluQuadricTexture(quad, GL_TRUE); // On active les textures
-//    }
-
-
-//    GLfloat colorAmbiant_And_Diffuse[] = { r/255.0f, g/255.0f, b/255.0f, 1.0 };
-//    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, colorAmbiant_And_Diffuse) ;
-
-//    GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-//    GLfloat light_diffuse[] = { 0.0, 0.0, 0.0, 1.0 };
-//    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, light_specular);
-//    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_diffuse);
-    //glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, colorAmbiant_And_Diffuse);
-
-    glColor3ub(r, g, b);
-    // Affichage
-    glBegin(GL_QUADS);
-
-    glColor3ub(r, g, b);
-
-    if (isFrontier(N)){
-
-        glColor3ub(255,0,0);    //rouge
-
-        // mur
-        glNormal3f(1.0, 0.0, 0.0);
-        glVertex3f(-0.4f, 1.0f, -0.5f);
-        glVertex3f(-0.4f, -1.0f, -0.5f);
-        glVertex3f(-0.4f, -1.0f, 0.5f);
-        glVertex3f(-0.4f, 1.0f, 0.5f);
-
-        // fermeture du mur
-        glNormal3f(0.0, 0.0, 1.0);
-        glVertex3f(-0.4f, 1.0f, -0.5f);
-        glVertex3f(-0.4f, -1.0f, -0.5f);
-        glVertex3f(-0.5f, -1.0f, -0.5f);
-        glVertex3f(-0.5f, 1.0f, -0.5f);
-
-        glNormal3f(0.0, 0.0, 1.0);
-        glVertex3f(-0.4f, 1.0f, 0.5f);
-        glVertex3f(-0.4f, -1.0f, 0.5f);
-        glVertex3f(-0.5f, -1.0f, 0.5f);
-        glVertex3f(-0.5f, 1.0f, 0.5f);
-    }
-
-    if (isFrontier(S)){
-
-        glColor3ub(0,255,0);    //vert
-
-        glNormal3f(1.0, 0.0, 0.0);
-        glVertex3f(0.4f, 1.0f, -0.5f);
-        glVertex3f(0.4f, -1.0f, -0.5f);
-        glVertex3f(0.4f, -1.0f, 0.5f);
-        glVertex3f(0.4f, 1.0f, 0.5f);
-
-        glNormal3f(0.0, 0.0, 1.0);
-        glVertex3f(0.4f, 1.0f, -0.5f);
-        glVertex3f(0.4f, -1.0f, -0.5f);
-        glVertex3f(0.5f, -1.0f, -0.5f);
-        glVertex3f(0.5f, 1.0f, -0.5f);
-
-        glNormal3f(0.0, 0.0, 1.0);
-        glVertex3f(0.4f, 1.0f, 0.5f);
-        glVertex3f(0.4f, -1.0f, 0.5f);
-        glVertex3f(0.5f, -1.0f, 0.5f);
-        glVertex3f(0.5f, 1.0f, 0.5f);
-    }
-
-    if (isFrontier(E)){
-
-        glColor3ub(0,0,255);    //bleu
-
-        glNormal3f(0.0, 0.0, 1.0);
-        glVertex3f(-0.5f, 1.0f, -0.4f);
-        glVertex3f(-0.5f, -1.0f, -0.4f);
-        glVertex3f(0.5f, -1.0f, -0.4f);
-        glVertex3f(0.5f, 1.0f, -0.4f);
-
-        glNormal3f(1.0, 0.0, 0.0);
-        glVertex3f(0.5f, 1.0f, -0.4f);
-        glVertex3f(0.5f, -1.0f, -0.4f);
-        glVertex3f(0.5f, -1.0f, -0.5f);
-        glVertex3f(0.5f, 1.0f, -0.5f);
-
-        glNormal3f(1.0, 0.0, 0.0);
-        glVertex3f(-0.5f, 1.0f, -0.4f);
-        glVertex3f(-0.5f, -1.0f, -0.4f);
-        glVertex3f(-0.5f, -1.0f, -0.5f);
-        glVertex3f(-0.5f, 1.0f, -0.5f);
-    }
-
-    if (isFrontier(W)){
-
-        glColor3ub(255,255,255);    // blanc
-
-        glNormal3f(0.0, 0.0, 1.0);
-        glVertex3f(-0.5f, 1.0f, 0.4f);
-        glVertex3f(-0.5f, -1.0f, 0.4f);
-        glVertex3f(0.5f, -1.0f, 0.4f);
-        glVertex3f(0.5f, 1.0f, 0.4f);
-
-        glNormal3f(1.0, 0.0, 0.0);
-        glVertex3f(0.5f, 1.0f, 0.4f);
-        glVertex3f(0.5f, -1.0f, 0.4f);
-        glVertex3f(0.5f, -1.0f, 0.5f);
-        glVertex3f(0.5f, 1.0f, 0.5f);
-
-        glNormal3f(1.0, 0.0, 0.0);
-        glVertex3f(-0.5f, 1.0f, 0.4f);
-        glVertex3f(-0.5f, -1.0f, 0.4f);
-        glVertex3f(-0.5f, -1.0f, 0.5f);
-        glVertex3f(-0.5f, 1.0f, 0.5f);
-    }
-
-    glEnd();
-}*/

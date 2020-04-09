@@ -32,6 +32,8 @@ class Maze
     list<Point> neighbors(Point p);
     Cell::Direction direction(Point f, Point t);
 
+    void spheretrouve();
+
 public:
     Maze(int width = 10,int height = 6);
     int getWidth(){return width_;};
@@ -41,7 +43,7 @@ public:
     void display3D(float l, float c);
     void display2D(QPainter * dessinateur);
     void generate(bool show=false);
-    void spheretrouve();
+    void gestionPos(double pos_x, double pos_y);
 };
 
 #endif // MAZE_H
