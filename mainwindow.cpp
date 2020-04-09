@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer.start();
 
     // Connexion du timer à la MaJ d'OpenCV
-    connect(&timer,  &QTimer::timeout, this,    &MainWindow::updateCV);
+    connect(&timer,  &QTimer::timeout, this,    [&]{ this->startMultiThreadProcess(mutx); });
 
     // Connexion du timer à la MaJ de MazeWidget
     connect(this,  &MainWindow::updateGLWidget, ui->maze,    &MazeWidget::updateView);
@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //
     props = new Properties (webCam_);
     initCV();
+
 }
 
 MainWindow::~MainWindow()
@@ -44,7 +45,37 @@ MainWindow::~MainWindow()
 
 }
 
+int MainWindow::startMultiThreadProcess(mutex &m){
 
+    //std::thread th1([&]{this->processUpdateCV(m);});
+    std::thread th1([&]{this->updateCV();});
+    if (props->flagMajMaze == 1){
+        checkCollide(ui->maze->getPosX(),ui->maze->getPosX(),ui->maze->getPosX())
+        std::thread th2([&]{this->updateGLWidget(props->deplacementAExecuter);});
+        //updateGLWidget(props->deplacementAExecuter);
+        th2.join();
+
+        props->flagMajMaze = 0;
+        props->deplacementAExecuter = '0';
+    }
+
+    th1.join();
+    return(0);
+
+
+}
+
+
+
+
+
+/*
+void MainWindow::processUpdateCV(mutex &m)
+{
+
+    updateCV();
+}
+*/
 void MainWindow::updateCV(){
 
     if (webCam_->read(image1)) {   // Capture a frame
@@ -143,4 +174,15 @@ void MainWindow::initCV(){
 void MainWindow::on_pushButton_clicked()
 {
     initCV();
+}
+
+int MainWindow::checkCollide(int posX,int posY, int posZ){
+
+
+    if (ok == 1)
+        return(1);
+    else
+        return(0);
+
+
 }

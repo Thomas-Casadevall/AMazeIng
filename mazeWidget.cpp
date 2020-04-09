@@ -233,20 +233,34 @@ void MazeWidget::keyPressEventCall(QKeyEvent * event)
         case Qt::Key_Right:
             majVue('r');
         break;
+        case Qt::Key_D:
+            majVue('r');
+        break;
 
         case Qt::Key_Left:
+            majVue('l');
+        break;
+        case Qt::Key_A:
             majVue('l');
         break;
 
         case Qt::Key_Down:
             majVue('b');
         break;
+        case Qt::Key_S:
+            majVue('b');
+        break;
 
         case Qt::Key_Up:
+
+            majVue('f');
+        break;
+        case Qt::Key_W:
+
             majVue('f');
         break;
 
-        case Qt::Key_D:
+        case Qt::Key_E:
             y = 10 - y;
             repaint();
         break;
@@ -339,6 +353,9 @@ void MazeWidget::majVue(char command){
         repaint();
     break;
 
+    case '0':
+        qDebug() << "Pas de Mouvement à effectuer";
+    break;
     default:
         qDebug() << "error";
     break;

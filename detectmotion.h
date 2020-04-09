@@ -29,7 +29,8 @@ public:
     cv::Rect workingRect,templateRect,WorkingRectNez ;
     cv::Point workingCenter;
     double oldVectX=0,oldVectY=0;
-
+    int flagMajMaze=0;
+    char deplacementAExecuter = '0';
 
     int valTest = 1;
 
@@ -43,12 +44,14 @@ public:
     int getPosY()const{return PosY;};
     void chgtPosX(int NewX){PosX = NewX;};
     void chgtPosY(int NewY){PosY = NewY;};
+    void CheckMove(cv::Point vecteur);
 
 protected:
 private:
     cv::Mat imageReduiteNezReference;
     cv::Mat imageReduiteNezReferenceTampon;
     double PosX,PosY;
+
 
 
 
