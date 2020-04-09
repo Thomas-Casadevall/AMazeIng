@@ -36,27 +36,38 @@ Properties::Properties(cv::VideoCapture * webCam_){
 
 
 }
+void Properties::chgtNezRef(Mat Image){
+    imageReduiteNezReference = Image;
+};
+void Properties::chgtNezRefTmp(cv::Mat Image){
+    imageReduiteNezReferenceTampon = Image;
+};
+
+Properties::~Properties(){
+    std::cout<<"Error1";
+}
 
 
-Mat DetectMotion(cv::VideoCapture * webCam_,Mat imageReference,Properties props)
+
+std::pair<Mat, int> DetectMotion(cv::VideoCapture * webCam_,Mat imageReference,Properties & props)
 {
 
-            //----------------------------------------------------//
-            // Verification de l'ouverture correcte de la camera  //
-            //----------------------------------------------------//
-    imshow("WebCam", props.imageReduiteNezReference);
+    //----------------------------------------------------//
+    // Verification de l'ouverture correcte de la camera  //
+    //----------------------------------------------------//
+    imshow("WebCam", props.getNez());
 
     if(!webCam_->isOpened())  // check if we succeeded
     {
-    std::cout<<"Error openning the default camera"<<std::endl;
+        std::cout<<"Error openning the default camera"<<std::endl;
         Mat image2;
-        return image2;
+        return {image2,2};
     }
 
 
 
     //Definition des Matrices utilisées
-    Mat image2, image_gray_Capture , imageReduiteReference,imageReduiteCapture2 , imageReduiteCapture,imageReduiteTest;//imageReduiteNezReference;
+    Mat image2, image2copy, image_gray_Capture , imageReduiteReference,imageReduiteCapture2 , imageReduiteCapture,imageReduiteTest;//imageReduiteNezReference;
 
 
     // Get imageReference // Passé en paramètre -> Image de reference
@@ -67,14 +78,9 @@ Mat DetectMotion(cv::VideoCapture * webCam_,Mat imageReference,Properties props)
     //    Affichage du visage sur l'image de reference    //
     //----------------------------------------------------//
 
-    /*
-    if (facesRef.size()>0)
-    {
-    // Draw blue rectangle
-    for (int i=0;i<(int)facesRef.size();i++)
-      rectangle(imageReference,facesRef[i],Scalar(255,255,0),2);
-    }
-    */
+
+
+
 
 
 
@@ -111,85 +117,208 @@ Mat DetectMotion(cv::VideoCapture * webCam_,Mat imageReference,Properties props)
     // Init output window
     //namedWindow("WebCam",1);
 
-        // Get image2
-        webCam_->read(image2);
-        // Mirror effect
-        //cv::flip(image2,image2,1);
+    // Get image2
+    webCam_->read(image2);
+    image2.copyTo(image2copy);
+    // Mirror effect
+    //cv::flip(image2,image2,1);
 
-        // Extract working rect2 in image2 and convert it to gray
-        Rect workingRectCapture;
-        std::vector<Rect> facesCapture;
+    // Extract working rect2 in image2 and convert it to gray
+    Rect workingRectCapture;
+    std::vector<Rect> facesCapture;
 
-        cv::cvtColor(image2,image_gray_Capture,COLOR_BGR2GRAY);
-        // Equalize graylevels
-        //        equalizeHist( image_gray_Capture, image_gray_Capture );
-
-
-        //----------------------------------------------------//
-        //      Detection du visage sur l'image capturée      //
-        //----------------------------------------------------//
+    cv::cvtColor(image2,image_gray_Capture,COLOR_BGR2GRAY);
+    // Equalize graylevels
+    //        equalizeHist( image_gray_Capture, image_gray_Capture );
 
 
-               facesCapture.clear();
-
-               props.face_cascade.detectMultiScale( image_gray_Capture, facesCapture, 1.1, 4, 0, Size(60, 60) );
-
-               workingRectCapture = facesCapture[1];
-               Point workingCenterCapture = Point (workingRectCapture.x+workingRectCapture.width/2,workingRectCapture.y+workingRectCapture.height/2);
+    //----------------------------------------------------//
+    //      Detection du visage sur l'image capturée      //
+    //----------------------------------------------------//
 
 
-        cv::cvtColor(Mat(image2,workingRectCapture),imageReduiteCapture,COLOR_BGR2GRAY);
+    facesCapture.clear();
 
+    props.face_cascade.detectMultiScale( image_gray_Capture, facesCapture, 1.1, 4, 0, Size(60, 60) );
+    if (facesCapture.size()==0){
+        return {image2,1};
+    }
 
-        if (imageReduiteCapture.size() != imageReduiteReference.size() ){
-                //std::cout<<imageReduiteReference.size()<<"     "<<imageReduiteCapture.size()<<std::endl;
-                //imageReduiteCapture.resize(imageReduiteReference.size().width,imageReduiteReference.size().height);
-                resize(imageReduiteCapture,imageReduiteCapture2, imageReduiteReference.size(), 0, 0,INTER_LINEAR );
-                //std::cout<<imageReduiteReference.size()<<"     "<<imageReduiteCapture2.size()<<std::endl<<std::endl<<std::endl;
-
-               //cv::hconcat(imageReduiteReference, imageReduiteCapture2, imageReduiteTest);
-               //imshow("WebCam", imageReduiteTest);
-               //cv::waitKey(1);
-
+    if (facesCapture.size()>0)
+    {
+        // Draw green rectangle
+        for (int i=0;i<(int)facesCapture.size();i++){
+            rectangle(image2,facesCapture[i],Scalar(255,255,255),3);
         }
-        else{
-            imageReduiteCapture.copyTo(imageReduiteCapture2);
-        }
+         //std::cout <<"Size: " << facesCapture.size();
+    }
+
+    workingRectCapture = facesCapture[1];
+    //workingRectCapture=props.workingRect;
+    Point workingCenterCapture = Point (workingRectCapture.x+workingRectCapture.width/2,workingRectCapture.y+workingRectCapture.height/2);
+
+
+    cv::cvtColor(Mat(image2,workingRectCapture),imageReduiteCapture,COLOR_BGR2GRAY);
+
+
+    if (imageReduiteCapture.size() != imageReduiteReference.size() ){
+        //std::cout<<imageReduiteReference.size()<<"     "<<imageReduiteCapture.size()<<std::endl;
+        //imageReduiteCapture.resize(imageReduiteReference.size().width,imageReduiteReference.size().height);
+        resize(imageReduiteCapture,imageReduiteCapture2, imageReduiteReference.size(), 0, 0,INTER_LINEAR );
+        //std::cout<<imageReduiteReference.size()<<"     "<<imageReduiteCapture2.size()<<std::endl<<std::endl<<std::endl;
+
+        //cv::hconcat(imageReduiteReference, imageReduiteCapture2, imageReduiteTest);
+        //imshow("WebCam", imageReduiteTest);
+        //cv::waitKey(1);
+
+    }
+    else{
+        imageReduiteCapture.copyTo(imageReduiteCapture2);
+    }
 
 
 
-        // MATCHING  Du Nez sur l'image 2
+    // MATCHING  Du Nez sur l'image 2
 
 
 
 
-        matchTemplate(image_gray_Capture, props.imageReduiteNezReference, resultImage, TM_CCORR_NORMED );
-        // Localize the best match with minMaxLoc
-        double minVal; double maxVal; Point minLoc; Point maxLoc;
-        minMaxLoc( resultImage, &minVal, &maxVal, &minLoc, &maxLoc);
+    matchTemplate(image_gray_Capture, props.getNez(), resultImage, TM_CCORR_NORMED );
+    // Localize the best match with minMaxLoc
+    double minVal; double maxVal; Point minLoc; Point maxLoc;
+    minMaxLoc( resultImage, &minVal, &maxVal, &minLoc, &maxLoc);
 
-        // Compute the translation vector between the origin and the matching rect
-        Point vect(maxLoc.x-WorkingRectNez.x,maxLoc.y-WorkingRectNez.y);
+    // Compute the translation vector between the origin and the matching rect
+    Point vect(maxLoc.x-WorkingRectNez.x,maxLoc.y-WorkingRectNez.y);
 
-        // Draw green rectangle and the translation vector
-        //rectangle(frame2,workingRect,Scalar( 0, 255, 0),2);
-        Point p(props.workingCenter.x+vect.x,props.workingCenter.y+vect.y);
-        //Point p(workingCenterCapture.x+vect.x , workingCenterCapture.y+vect.y);
-        arrowedLine(image2,props.workingCenter,p,Scalar(255,255,255),2);
-        std::cout << vect << std::endl << std::endl;
-/*
-        if (vect.y <= -15 && props.valTest == 1){
+
+
+
+    //---------------------------------------------------------------------------//
+    //  Changement d'image de reference en cas de deplacement important selon Y; //
+    //---------------------------------------------------------------------------//
+   // double x = pow((vect.y-props.getPosY()),2);
+    //double y = pow(vect.x-props.getPosX(),2);
+    /*
+     * double x = pow((vect.y-props.oldVectY),2);
+    double y = pow(vect.x-props.oldVectX,2);
+    double z = x+y;
+    double test = std::sqrt(z);
+    std::cout <<  "---" << test << "---" << std::endl;
+    props.oldVectX = vect.x;
+    props.oldVectY = vect.y;
+
+    Point p(props.workingCenter.x+vect.x,props.workingCenter.y+vect.y);
+    arrowedLine(image2,props.workingCenter,p,Scalar(255,255,255),2);
+*/
+std::cout <<  "-y-" << props.oldVectY << "---" << std::endl;
+std::cout <<  "-x-" << props.oldVectX << "---" << std::endl;
+    //if (sqrt(pow(vect.y-props.oldVectY,2)+pow(vect.x-props.oldVectX,2))<=30){
+
+        props.oldVectX = vect.x;
+        props.oldVectY = vect.y;
+
+        if (vect.y <= -10 && vect.y <= props.getPosY()-10){
             Rect WorkingRectNez2 = Rect (workingCenterCapture.x - workingRectCapture.width/4 , workingCenterCapture.y - workingRectCapture.width/4, workingRectCapture.height/2 ,workingRectCapture.width/2);
-            props.imageReduiteNezReferenceTampon = props.imageReduiteNezReference;
-            cv::cvtColor(Mat(image2,WorkingRectNez2),props.imageReduiteNezReference,COLOR_BGR2GRAY);
+            if (props.valTest==1)
+                props.chgtNezRefTmp(props.getNez());
+            Mat test;
+            cv::cvtColor(Mat(image2copy,WorkingRectNez2),test,COLOR_BGR2GRAY);
+            props.chgtNezRef(test);
+            props.chgtPosY(props.getPosY()-10);
             props.valTest=0;
         }
-        if (vect.y > -15 && props.valTest==0 ){
-            props.valTest=1;
-            props.imageReduiteNezReference = props.imageReduiteNezReferenceTampon;
+        else if (vect.y <= -10 && vect.y >= props.getPosY()+10){
+            Rect WorkingRectNez2 = Rect (workingCenterCapture.x - workingRectCapture.width/4 , workingCenterCapture.y - workingRectCapture.width/4, workingRectCapture.height/2 ,workingRectCapture.width/2);
+            if (props.valTest==1)
+                props.chgtNezRefTmp(props.getNez());
+            Mat test;
+            cv::cvtColor(Mat(image2copy,WorkingRectNez2),test,COLOR_BGR2GRAY);
+            props.chgtNezRef(test);
+            props.chgtPosY(props.getPosY()+10);
+            props.valTest=0;
         }
 
-*/
+        else if (vect.y >= 10 && vect.y >= props.getPosY()+10){
+            Rect WorkingRectNez2 = Rect (workingCenterCapture.x - workingRectCapture.width/4 , workingCenterCapture.y - workingRectCapture.width/4, workingRectCapture.height/2 ,workingRectCapture.width/2);
+            if (props.valTest==1)
+                props.chgtNezRefTmp(props.getNez());
+            Mat test;
+            cv::cvtColor(Mat(image2copy,WorkingRectNez2),test,COLOR_BGR2GRAY);
+            props.chgtNezRef(test);
+            props.chgtPosY(props.getPosY()+10);
+            props.valTest=0;
+        }
+        else if (vect.y >= -10 && vect.y <= props.getPosY()-10){
+            Rect WorkingRectNez2 = Rect (workingCenterCapture.x - workingRectCapture.width/4 , workingCenterCapture.y - workingRectCapture.width/4, workingRectCapture.height/2 ,workingRectCapture.width/2);
+            if (props.valTest==1)
+                props.chgtNezRefTmp(props.getNez());
+            Mat test;
+            cv::cvtColor(Mat(image2copy,WorkingRectNez2),test,COLOR_BGR2GRAY);
+            props.chgtNezRef(test);
+            props.chgtPosY(props.getPosY()-10);
+            props.valTest=0;
+        }
+
+        //Changement d'image de reference en cas de deplacement important selon X;
+        if (vect.x <= -10 && vect.x <= props.getPosX()-10){
+            Rect WorkingRectNez2 = Rect (workingCenterCapture.x - workingRectCapture.width/4 , workingCenterCapture.y - workingRectCapture.width/4, workingRectCapture.height/2 ,workingRectCapture.width/2);
+            if (props.valTest==1)
+                props.chgtNezRefTmp(props.getNez());
+            Mat test;
+            cv::cvtColor(Mat(image2copy,WorkingRectNez2),test,COLOR_BGR2GRAY);
+            props.chgtNezRef(test);
+            props.chgtPosX(props.getPosX()-10);
+            props.valTest=0;
+        }
+        else if (vect.x <= -10 && vect.x >= props.getPosX()+10){
+            Rect WorkingRectNez2 = Rect (workingCenterCapture.x - workingRectCapture.width/4 , workingCenterCapture.y - workingRectCapture.width/4, workingRectCapture.height/2 ,workingRectCapture.width/2);
+            if (props.valTest==1)
+                props.chgtNezRefTmp(props.getNez());
+            Mat test;
+            cv::cvtColor(Mat(image2copy,WorkingRectNez2),test,COLOR_BGR2GRAY);
+            props.chgtNezRef(test);
+            props.chgtPosX(props.getPosX()+10);
+            props.valTest=0;
+        }
+
+        else if (vect.x >= 10 && vect.x >= props.getPosX()+10){
+            Rect WorkingRectNez2 = Rect (workingCenterCapture.x - workingRectCapture.width/4 , workingCenterCapture.y - workingRectCapture.width/4, workingRectCapture.height/2 ,workingRectCapture.width/2);
+            if (props.valTest==1)
+                props.chgtNezRefTmp(props.getNez());
+            Mat test;
+            cv::cvtColor(Mat(image2copy,WorkingRectNez2),test,COLOR_BGR2GRAY);
+            props.chgtNezRef(test);
+            props.chgtPosX(props.getPosX()+10);
+            props.valTest=0;
+        }
+        else if (vect.x >= -10 && vect.x <= props.getPosX()-10){
+            Rect WorkingRectNez2 = Rect (workingCenterCapture.x - workingRectCapture.width/4 , workingCenterCapture.y - workingRectCapture.width/4, workingRectCapture.height/2 ,workingRectCapture.width/2);
+            if (props.valTest==1)
+                props.chgtNezRefTmp(props.getNez());
+            Mat test;
+            cv::cvtColor(Mat(image2copy,WorkingRectNez2),test,COLOR_BGR2GRAY);
+            props.chgtNezRef(test);
+            props.chgtPosX(props.getPosX()-10);
+            props.valTest=0;
+        }
+
+
+
+        if ((vect.y > -10 && vect.y < 10) && (vect.x > -10 && vect.x < 10)  && props.valTest==0){
+            props.valTest=1;
+            props.chgtNezRef(props.getNezTmp());
+        }
+
+   //}
+
+    imshow("WebCam2", props.getNez());
+    // Draw green rectangle and the translation vector
+    //rectangle(frame2,workingRect,Scalar( 0, 255, 0),2);
+    Point p(props.workingCenter.x+vect.x,props.workingCenter.y+vect.y);
+    //Point p(workingCenterCapture.x+vect.x , workingCenterCapture.y+vect.y);
+    arrowedLine(image2,props.workingCenter,p,Scalar(255,255,255),2);
+    std::cout << vect << std::endl << std::endl;
 
 
 
@@ -208,28 +337,26 @@ Mat DetectMotion(cv::VideoCapture * webCam_,Mat imageReference,Properties props)
 
 
 
-
-
-/*
+    /*
          //affichage Image reduite
           if (1==1){
             //destroyWindow("WebCam");
-            imshow("WebCam", imageReduiteNezReference);
+            imshow("WebCam", getNez());
             }
 
 */
 
-        // ///////////////////////////////
+    // ///////////////////////////////
 
 
-        //----------------------------------------------------//
-        //                 Detection des nez                  //
-        //----------------------------------------------------//
+    //----------------------------------------------------//
+    //                 Detection des nez                  //
+    //----------------------------------------------------//
 
 
-        //std::vector<Rect> noseCapture;
-        //noseCapture.clear();
-/*
+    //std::vector<Rect> noseCapture;
+    //noseCapture.clear();
+    /*
         props.nose_cascade.detectMultiScale( imageReduiteCapture2, noseCapture, 1.1, 4, 0, Size(60, 60) );
         Rect noseRectCapture = noseCapture[1];
 
@@ -244,7 +371,7 @@ Mat DetectMotion(cv::VideoCapture * webCam_,Mat imageReference,Properties props)
 
 
 */
-        /*
+    /*
          // Test0 non adapté
         // Extract template image in frame1
         Mat templateImage(imageReduiteReference,templateRect);
@@ -263,7 +390,7 @@ Mat DetectMotion(cv::VideoCapture * webCam_,Mat imageReference,Properties props)
         */
 
 
-/*      // Test1
+    /*      // Test1
         // Extract template image in imageReference
         Mat templateImage(imageReduiteReference,props.templateRect);
 
@@ -282,18 +409,21 @@ Mat DetectMotion(cv::VideoCapture * webCam_,Mat imageReference,Properties props)
         Point p(props.workingCenter.x+vect.x,props.workingCenter.y+vect.y);
         arrowedLine(image2,props.workingCenter,p,Scalar(255,255,255),2);
 */
+    //Affichage Nez
     rectangle(image2,WorkingRectNez,Scalar( 0, 255, 0),2);
     rectangle(image2,props.workingRect,Scalar( 0, 255, 0),2);
+
+
     //rectangle(image2,workingRectCapture,Scalar( 255, 255, 255),2);
 
-        // Display image2
-        //imshow("WebCam", image2);
+    // Display image2
+    //imshow("WebCam", image2);
 
-        // Swap matrixes
-        //swap(imageReduiteReference,imageReduiteCapture);
+    // Swap matrixes
+    //swap(imageReduiteReference,imageReduiteCapture);
 
     // the camera will be deinitialized automatically in VideoCapture destructor
-    return image2;
+    return {image2,0};
     //return imageReduiteTest;
 
 

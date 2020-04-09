@@ -23,6 +23,7 @@ public:
     cv::Mat ImageReference;
     cv::Mat image_gray_Reference;
     std::vector<cv::Rect> facesRef;
+    int codeSortie;
 
 private slots:
     void updateCV();

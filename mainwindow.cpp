@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     width = webCam_->get(CAP_PROP_FRAME_WIDTH);
     height= webCam_->get(CAP_PROP_FRAME_HEIGHT);
     ui->imageLabel_->setText("L'image va bientôt s'afficher, veuillez patienter!");
+    ui->statutLabel_->setText("Démarrage...");
 
 
     //
@@ -39,14 +40,17 @@ MainWindow::~MainWindow()
     delete webCam_;
     delete props;
     delete ui;
+
 }
 
 
 void MainWindow::updateCV(){
 
     if (webCam_->read(image1)) {   // Capture a frame
-
-        image2 = DetectMotion(webCam_,ImageReference,*props);
+        std::pair<Mat, int> myPair;
+        myPair = DetectMotion(webCam_,ImageReference,*props);
+        image2 = myPair.first;
+        codeSortie = myPair.second;
         //webCam_->read(image2);
 
         // Flip to get a mirror effect - Useless, done inside the function
@@ -87,6 +91,7 @@ void MainWindow::keyPressEvent(QKeyEvent * event){
 }
 
 void MainWindow::initCV(){
+
     do{
        webCam_->read(ImageReference);
        // Mirror effect
@@ -110,12 +115,13 @@ void MainWindow::initCV(){
 
        props->subImageWidth = props->workingRect.width;
        props->subImageHeight = props->workingRect.height;
-       props->workingCenter = Point (props->workingRect.x+props->subImageWidth/2,props->workingRect.y+props->subImageHeight/2);
-
+       props->workingCenter = cv::Point (props->workingRect.x+props->subImageWidth/2,props->workingRect.y+props->subImageHeight/2);
+        props->chgtPosX(props->workingCenter.x);
+        props->chgtPosY(props->workingCenter.y);
        std::cout << "taille facesRef " <<facesRef.size()<< ' ';
 
        for (int i = 0; i < (int)facesRef.size(); i++) {
-           std::cout << "facesRef " <<facesRef.at(i)<< ' ';
+           std::cout << "facesRef " <<facesRef.at(i)<<' ';
        }
 
     }while (facesRef.size()==0);
@@ -125,15 +131,9 @@ void MainWindow::initCV(){
 
 
     props->WorkingRectNez = Rect (props->workingCenter.x - props->workingRect.width/4 , props->workingCenter.y - props->workingRect.width/4, props->workingRect.height/2 ,props->workingRect.width/2);
-    cv::cvtColor(Mat(ImageReference,props->WorkingRectNez),props->imageReduiteNezReference,COLOR_BGR2GRAY);
-
-
-
-
-
-
-
-
+    Mat tampon;
+    cv::cvtColor(Mat(ImageReference,props->WorkingRectNez),tampon,COLOR_BGR2GRAY);
+    props->chgtNezRef(tampon);
 
 
 }
