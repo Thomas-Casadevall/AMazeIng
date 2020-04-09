@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer.start();
 
     // Connexion du timer à la MaJ d'OpenCV
-    //connect(&timer,  &QTimer::timeout, this,    &MainWindow::updateCV);
+    connect(&timer,  &QTimer::timeout, this,    &MainWindow::updateCV);
 
     // Connexion du timer à la MaJ de MazeWidget
     connect(this,  &MainWindow::updateGLWidget, ui->maze,    &MazeWidget::updateView);

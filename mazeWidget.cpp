@@ -84,15 +84,15 @@ void MazeWidget::initializeGL()
 
 
 
-    GLfloat light2_diffuse[] = { 1.0, 1.0, 1.0 };
-    GLfloat light2_ambiant[] = { 0.0, 0.0, 0.0 };
-    GLfloat light2_specular[] = { 0.0, 0.0, 0.0 };
+//    GLfloat light2_diffuse[] = { 1.0, 1.0, 1.0 };
+//    GLfloat light2_ambiant[] = { 0.0, 0.0, 0.0 };
+//    GLfloat light2_specular[] = { 0.0, 0.0, 0.0 };
 
-    glLightfv(GL_LIGHT2, GL_DIFFUSE, light2_diffuse);
-    glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambiant);
-    glLightfv(GL_LIGHT2, GL_SPECULAR, light2_specular);
+//    glLightfv(GL_LIGHT2, GL_DIFFUSE, light2_diffuse);
+//    glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambiant);
+//    glLightfv(GL_LIGHT2, GL_SPECULAR, light2_specular);
 
-    glEnable(GL_LIGHT2); // Allume la 2ème lumière
+//    glEnable(GL_LIGHT2); // Allume la 2ème lumière
 
 }
 
@@ -167,12 +167,12 @@ void MazeWidget::paintGL()
 
 
 
-    GLfloat light2_position[] = { 1.0, 1.0, 0.0, 0.0 };
+//    GLfloat light2_position[] = { 1.0, 1.0, 0.0, 0.0 };
 //    GLfloat light2_diffuse[] = { 1.0, 1.0, 1.0 };
 //    GLfloat light2_ambiant[] = { 0.0, 0.0, 0.0 };
 //    GLfloat light2_specular[] = { 0.0, 0.0, 0.0 };
 
-    glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
+//    glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
 //    glLightfv(GL_LIGHT2, GL_DIFFUSE, light2_diffuse);
 //    glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambiant);
 //    glLightfv(GL_LIGHT2, GL_SPECULAR, light2_specular);
