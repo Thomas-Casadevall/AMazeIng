@@ -61,7 +61,7 @@ void MazeWidget::initializeGL()
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
 
-    GLfloat light0_diffuse[] = { 1.0, 1.0, 1.0 };
+    GLfloat light0_diffuse[] = { 0.0, 0.0, 0.0 };
     GLfloat light0_ambiant[] = { 1.0, 1.0, 1.0 };
     GLfloat light0_specular[] = { 0.0, 0.0, 0.0 };
 
@@ -71,8 +71,7 @@ void MazeWidget::initializeGL()
 
     glEnable(GL_LIGHT0); // Allume la 1ere lumière
 
-
-    GLfloat light1_diffuse[] = { 0.3, 0.3, 0.3 };
+    GLfloat light1_diffuse[] = { 0.8, 0.8, 0.8 };
     GLfloat light1_ambiant[] = { 0.0, 0.0, 0.0 };
     GLfloat light1_specular[] = { 0.0, 0.0, 0.0 };
 
@@ -84,15 +83,18 @@ void MazeWidget::initializeGL()
 
 
 
-//    GLfloat light2_diffuse[] = { 1.0, 1.0, 1.0 };
-//    GLfloat light2_ambiant[] = { 0.0, 0.0, 0.0 };
-//    GLfloat light2_specular[] = { 0.0, 0.0, 0.0 };
+//    GLfloat light2_position[] = { 1.0, 1.0, 0.0, 0.0 };
+    GLfloat light2_diffuse[] = { 1.0, 1.0, 1.0 };
+    GLfloat light2_ambiant[] = { 0.0, 0.0, 0.0 };
+    GLfloat light2_specular[] = { 0.0, 0.0, 0.0 };
 
-//    glLightfv(GL_LIGHT2, GL_DIFFUSE, light2_diffuse);
-//    glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambiant);
-//    glLightfv(GL_LIGHT2, GL_SPECULAR, light2_specular);
 
-//    glEnable(GL_LIGHT2); // Allume la 2ème lumière
+//    glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
+    glLightfv(GL_LIGHT2, GL_DIFFUSE, light2_diffuse);
+    glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambiant);
+    glLightfv(GL_LIGHT2, GL_SPECULAR, light2_specular);
+
+    glEnable(GL_LIGHT2); // Allume la 2ème lumière
 
 }
 
@@ -153,7 +155,7 @@ void MazeWidget::paintGL()
 
 
 
-    GLfloat light1_position[] = { -1.5, 1.0, 0.0, 0.0 };
+    GLfloat light1_position[] = { 1, 1.0, 2.0, 0.0 };
 //    GLfloat light1_diffuse[] = { 0.3, 0.3, 0.3 };
 //    GLfloat light1_ambiant[] = { 0.0, 0.0, 0.0 };
 //    GLfloat light1_specular[] = { 0.0, 0.0, 0.0 };
@@ -167,12 +169,12 @@ void MazeWidget::paintGL()
 
 
 
-//    GLfloat light2_position[] = { 1.0, 1.0, 0.0, 0.0 };
+    GLfloat light2_position[] = { -1.5, 1.0, -1.5, 1.0 };
 //    GLfloat light2_diffuse[] = { 1.0, 1.0, 1.0 };
 //    GLfloat light2_ambiant[] = { 0.0, 0.0, 0.0 };
 //    GLfloat light2_specular[] = { 0.0, 0.0, 0.0 };
 
-//    glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
+    glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
 //    glLightfv(GL_LIGHT2, GL_DIFFUSE, light2_diffuse);
 //    glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambiant);
 //    glLightfv(GL_LIGHT2, GL_SPECULAR, light2_specular);
@@ -186,23 +188,39 @@ void MazeWidget::paintGL()
 
 
 
-    // ------ Sol ------
+    // ------ Sol et plafond ------
+    GLfloat light_plaf_ambient[] = { 0.2, 0.2, 0.2 };
+    GLfloat light_plaf_diffuse[] = { 0.0, 0.0, 0.0 };
+    GLfloat light_plaf_emission[] = { 0.0, 0.0, 0.0 };
 
-    GLfloat light_ambient[] = { 0.1, 0.1, 0.1 };
-    GLfloat light_diffuse[] = { 0.0, 0.0, 0.0 };
-    GLfloat light_emission[] = { 0.0, 0.0, 0.0 };
-    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_emission);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, light_ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, light_diffuse);
+    GLfloat light_sol_ambient[] = { 0.5, 0.5, 0.5 };
+    GLfloat light_sol_diffuse[] = { 0.0, 0.0, 0.0 };
+    GLfloat light_sol_emission[] = { 0.0, 0.0, 0.0 };
+
 
     glBegin(GL_QUADS);
 
     glNormal3f(0.0, 1.0, 0.0);
 
+
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_sol_emission);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, light_sol_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, light_sol_diffuse);
+
     glVertex3f(-1.0f, -1.0f, laby.getWidth() * 2 - 1);
     glVertex3f(laby.getHeight() * 2 - 1, -1.0f, laby.getWidth() * 2 - 1);
     glVertex3f(laby.getHeight() * 2 - 1, -1.0f, -1.0f);
     glVertex3f(-1.0f, -1.0f, -1.0f);
+
+
+//    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_plaf_emission);
+//    glMaterialfv(GL_FRONT, GL_AMBIENT, light_plaf_ambient);
+//    glMaterialfv(GL_FRONT, GL_DIFFUSE, light_plaf_diffuse);
+
+//    glVertex3f(-1.0f, 1.0f, laby.getWidth() * 2 - 1);
+//    glVertex3f(laby.getHeight() * 2 - 1, 1.0f, laby.getWidth() * 2 - 1);
+//    glVertex3f(laby.getHeight() * 2 - 1, 1.0f, -1.0f);
+//    glVertex3f(-1.0f, 1.0f, -1.0f);
 
     glEnd();
 
@@ -218,6 +236,7 @@ void MazeWidget::paintGL()
 // Fonction de gestion d'interactions clavier
 void MazeWidget::keyPressEventCall(QKeyEvent * event)
 {
+    qDebug() << event->key();
 
     switch(event->key())
     {
@@ -230,23 +249,23 @@ void MazeWidget::keyPressEventCall(QKeyEvent * event)
         case Qt::Key_Escape:
             onArrete();
 
-        case Qt::Key_Right:
+        case Qt::Key_D:
             majVue('r');
         break;
 
-        case Qt::Key_Left:
+        case Qt::Key_Q:
             majVue('l');
         break;
 
-        case Qt::Key_Down:
+        case Qt::Key_S:
             majVue('b');
         break;
 
-        case Qt::Key_Up:
+        case Qt::Key_Z:
             majVue('f');
         break;
 
-        case Qt::Key_D:
+        case Qt::Key_F:
             y = 10 - y;
             repaint();
         break;
@@ -314,13 +333,11 @@ void MazeWidget::majVue(char command){
     case 'f':
         pos_x += angle2x();
         pos_z += angle2z();
-        repaint();
     break;
 
     case 'b':
         pos_x -= angle2x();
         pos_z -= angle2z();
-        repaint();
     break;
 
     case 'l':
@@ -328,7 +345,6 @@ void MazeWidget::majVue(char command){
             angleVue = 360 - PAS_VUE + angleVue;
         else
             angleVue-=PAS_VUE;
-        repaint();
     break;
 
     case 'r':
@@ -336,7 +352,6 @@ void MazeWidget::majVue(char command){
             angleVue = 360 + PAS_VUE - angleVue;
         else
             angleVue+=PAS_VUE;
-        repaint();
     break;
 
     default:
@@ -344,6 +359,8 @@ void MazeWidget::majVue(char command){
     break;
     }
 
+    laby.gestionPos(pos_x, pos_z);
+    repaint();
 }
 
 double MazeWidget::angle2x(){

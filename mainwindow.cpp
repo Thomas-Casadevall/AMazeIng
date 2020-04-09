@@ -17,29 +17,34 @@ MainWindow::MainWindow(QWidget *parent) :
     timer.start();
 
     // Connexion du timer à la MaJ d'OpenCV
-    connect(&timer,  &QTimer::timeout, this,    &MainWindow::updateCV);
+    // FIXME: j'ai mis en commentaire, je l'utilise pas pour l'instant
+    //connect(&timer,  &QTimer::timeout, this,    &MainWindow::updateCV);
 
     // Connexion du timer à la MaJ de MazeWidget
     connect(this,  &MainWindow::updateGLWidget, ui->maze,    &MazeWidget::updateView);
 
+    connect(ui->maze, &MazeWidget::onArrete, [&] {exit(0);});
+
 
     // Camera setup
-    webCam_ =new cv::VideoCapture(0);
-    width = webCam_->get(CAP_PROP_FRAME_WIDTH);
-    height= webCam_->get(CAP_PROP_FRAME_HEIGHT);
-    ui->imageLabel_->setText("L'image va bientôt s'afficher, veuillez patienter!");
+    // FIXME: déso mais ça marche pas
+//    webCam_ =new cv::VideoCapture(0);
+//    width = webCam_->get(CAP_PROP_FRAME_WIDTH);
+//    height= webCam_->get(CAP_PROP_FRAME_HEIGHT);
+//    ui->imageLabel_->setText("L'image va bientôt s'afficher, veuillez patienter!");
 
 
-    //
-    props = new Properties (webCam_);
-    initCV();
+//    //
+//    props = new Properties (webCam_);
+//    initCV();
 }
 
 MainWindow::~MainWindow()
 {
-    delete webCam_;
-    delete props;
-    delete ui;
+    // FIXME: j'ai aussi commenté ça
+//    delete webCam_;
+//    delete props;
+//    delete ui;
 }
 
 
@@ -111,7 +116,9 @@ void MainWindow::initCV(){
 
        props->subImageWidth = props->workingRect.width;
        props->subImageHeight = props->workingRect.height;
-       props->workingCenter = Point (props->workingRect.x+props->subImageWidth/2,props->workingRect.y+props->subImageHeight/2);
+
+       // FIXME : ça compile pas du coup j'ai mis en commentaire
+       //props->workingCenter = Point (props->workingRect.x+props->subImageWidth/2,props->workingRect.y+props->subImageHeight/2);
 
        std::cout << "taille facesRef " <<facesRef.size()<< ' ';
 
