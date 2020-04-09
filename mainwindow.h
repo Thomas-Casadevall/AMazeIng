@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "opencv2/opencv.hpp"
 #include <QTimer>
+#include <QTime>
 //using namespace cv;
 #include "detectmotion.h"
 #include <thread>
@@ -57,6 +58,7 @@ private:
     int height;
     Properties * props;
     int checkCollide(int posX,int posY, int posZ);
+    QDateTime startTime;
 };
 
 #endif // MAINWINDOW_H

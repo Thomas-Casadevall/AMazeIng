@@ -36,6 +36,9 @@ public:
 
     double angle2x();
     double angle2z();
+    int getPosX()const{return pos_x;};
+    int getPosY()const{return pos_y;};
+    int getPosZ()const{return pos_z;};
 
 protected:
 
