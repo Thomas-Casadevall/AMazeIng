@@ -15,14 +15,20 @@ public:
     Properties(cv::VideoCapture * webCam_);
     int frameWidth=320;
     int frameHeight=240;
-    int subImageWidth=100;
-    int subImageHeight=100;
+    int subImageWidth=10;
+    int subImageHeight=10;
     int templateWidth=25;
     int templateHeight=25;
-    cv::Rect workingRect,templateRect;
+    cv::Rect workingRect,templateRect,WorkingRectNez ;
     cv::Point workingCenter;
+    cv::Mat imageReduiteNezReference;
+    cv::Mat imageReduiteNezReferenceTampon;
+    int PosX,PosY;
 
-    cv::CascadeClassifier face_cascade;
+
+    int valTest = 1;
+
+    cv::CascadeClassifier face_cascade,nose_cascade;
 protected:
 private:
 
@@ -31,7 +37,7 @@ private:
 
 
 
-cv::Mat DetectMotion(cv::VideoCapture * webCam_, cv::Mat image1,Properties props);
+cv::Mat DetectMotion(cv::VideoCapture * webCam_, cv::Mat imageReference,Properties props);
 
 
 

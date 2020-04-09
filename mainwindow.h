@@ -20,10 +20,14 @@ public:
     ~MainWindow();
     cv::Mat image2;
     cv::Mat image1;
+    cv::Mat ImageReference;
+    cv::Mat image_gray_Reference;
+    std::vector<cv::Rect> facesRef;
 
 private slots:
     void updateCV();
-    void quitter();
+    void initCV();
+    void on_pushButton_clicked();
 
 signals:
     void updateGLWidget(char a);
