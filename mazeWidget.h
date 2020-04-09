@@ -1,7 +1,7 @@
 #ifndef MYGLWIDGET_H
 #define MYGLWIDGET_H
 
-#include <QGLWidget>
+#include <QOpenGLWidget>
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QKeyEvent>
@@ -9,13 +9,15 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <QColor>
+#include <QGraphicsOpacityEffect>
 
 #include <Maze/cell.h>
 #include <Maze/maze.h>
+#include "minimap.h"
 
 
 // Classe dediee a l'affichage d'une scene OpenGL
-class MazeWidget : public QGLWidget
+class MazeWidget : public QOpenGLWidget
 {
     Q_OBJECT
 
@@ -23,15 +25,14 @@ public:
 
     // Constructeur
     MazeWidget(QWidget * parent = nullptr);
+    // Destructeur
+    ~MazeWidget();
 
-    // Fonction de gestion d'interactions clavier
+    // Events
     void keyPressEventCall(QKeyEvent * event);
 
     // Fonction du labyrinthe
     void majVue(char command);
-
-    // debug
-    void drawCube();
 
     double angle2x();
     double angle2z();
@@ -50,10 +51,18 @@ protected:
 private:
 
     int width, height;
+
+    // largeur des murs et d'un cellule
+    float l = 0.1, c = 2;
+
     int angleVue = 0;
     double pos_x = 0, pos_y = 0, pos_z = 0;
+    double y = 0;
 
     Maze laby;
+    MiniMap *miniMap;
+
+    QGraphicsOpacityEffect * effect;
 
 public slots:
 

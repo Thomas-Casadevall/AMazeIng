@@ -12,6 +12,8 @@
 #include <qopengl.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <QPainter>
+#include <QDebug>
 
 using namespace std;
 
@@ -25,13 +27,33 @@ private:
     int value_=EMPTY;
     bool frontier[4]={true,true,true,true};
 
+    int sphere;
+//    bool sortie;
+
+    // sphere
+    GLUquadric *quad;
+    GLuint texture;
+
+//    unsigned int r=0, g=0, b=255; // Bleu
+
 public:
+    Cell();
+    ~Cell();
+
     int getValue() const {return value_;}
     bool isFrontier(Direction d) const {return frontier[d];}
     void setValue(int type) {value_=type;}
     void setFrontier(Direction d,bool state) {frontier[d]=state;}
 
-    void display3D();
+    void setSphere();
+//    void setSortie() {sortie = true;};
+
+    void unsetSphere();
+//    void unsetSortie() {sortie = false;};
+
+    // l = demi largeur du mur, c = demi coté de la cellule
+    void display3D(float l, float c, bool ignore_S, bool ignore_E);
+    void display2D(QPainter * dessinateur, int off_x, int off_y);
 };
 
 #endif // CELL_H

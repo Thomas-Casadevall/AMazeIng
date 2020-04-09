@@ -15,8 +15,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     timer.setInterval(10);
     timer.start();
+
     // Connexion du timer à la MaJ d'OpenCV
-    connect(&timer,  &QTimer::timeout, this,    &MainWindow::updateCV);
+    //connect(&timer,  &QTimer::timeout, this,    &MainWindow::updateCV);
 
     //connexion du exit
     connect(ui->maze, &MazeWidget::onArrete, this,  &MainWindow::quitter);
@@ -31,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     //
-     props = new Properties (webCam_);
+    props = new Properties (webCam_);
 
 
 }

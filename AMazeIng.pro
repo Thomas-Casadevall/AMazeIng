@@ -25,14 +25,16 @@ SOURCES += \
     detectmotion.cpp \
     main.cpp \
     mainwindow.cpp \
-    mazeWidget.cpp
+    mazeWidget.cpp \
+    minimap.cpp
 
 HEADERS += \
     Maze/cell.h \
     Maze/maze.h \
     detectmotion.h \
     mainwindow.h \
-    mazeWidget.h
+    mazeWidget.h \
+    minimap.h
 
 INCLUDEPATH +=$$(OPENCV_DIR)\..\..\include
 
@@ -49,3 +51,6 @@ LIBS += -L$$(OPENCV_DIR)\lib \
 
 FORMS += \
     mainwindow.ui
+
+RESOURCES += \
+    ressources/ressources.qrc
