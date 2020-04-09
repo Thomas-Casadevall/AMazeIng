@@ -17,8 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer.start();
 
     // Connexion du timer à la MaJ d'OpenCV
-    // FIXME: j'ai mis en commentaire, je l'utilise pas pour l'instant
-    //connect(&timer,  &QTimer::timeout, this,    &MainWindow::updateCV);
+    connect(&timer,  &QTimer::timeout, this,    [&]{ this->startMultiThreadProcess(mutx); });
 
     // Connexion du timer à la MaJ de MazeWidget
     connect(this,  &MainWindow::updateGLWidget, ui->maze,    &MazeWidget::updateView);
@@ -27,32 +26,65 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     // Camera setup
-    // FIXME: déso mais ça marche pas
-//    webCam_ =new cv::VideoCapture(0);
-//    width = webCam_->get(CAP_PROP_FRAME_WIDTH);
-//    height= webCam_->get(CAP_PROP_FRAME_HEIGHT);
-//    ui->imageLabel_->setText("L'image va bientôt s'afficher, veuillez patienter!");
+    webCam_ =new cv::VideoCapture(0);
+    width = webCam_->get(CAP_PROP_FRAME_WIDTH);
+    height= webCam_->get(CAP_PROP_FRAME_HEIGHT);
+    ui->imageLabel_->setText("L'image va bientôt s'afficher, veuillez patienter!");
+    ui->statutLabel_->setText("Démarrage...");
 
 
-//    //
-//    props = new Properties (webCam_);
-//    initCV();
+    //
+    props = new Properties (webCam_);
+    initCV();
+
 }
 
 MainWindow::~MainWindow()
 {
-    // FIXME: j'ai aussi commenté ça
-//    delete webCam_;
-//    delete props;
-//    delete ui;
+    delete webCam_;
+    delete props;
+    delete ui;
+
+}
+
+int MainWindow::startMultiThreadProcess(mutex &m){
+
+    //std::thread th1([&]{this->processUpdateCV(m);});
+    std::thread th1([&]{this->updateCV();});
+    if (props->flagMajMaze == 1){
+        checkCollide(ui->maze->getPosX(),ui->maze->getPosX(),ui->maze->getPosX())
+        std::thread th2([&]{this->updateGLWidget(props->deplacementAExecuter);});
+        //updateGLWidget(props->deplacementAExecuter);
+        th2.join();
+
+        props->flagMajMaze = 0;
+        props->deplacementAExecuter = '0';
+    }
+
+    th1.join();
+    return(0);
+
+
 }
 
 
+
+
+
+/*
+void MainWindow::processUpdateCV(mutex &m)
+{
+
+    updateCV();
+}
+*/
 void MainWindow::updateCV(){
 
     if (webCam_->read(image1)) {   // Capture a frame
-
-        image2 = DetectMotion(webCam_,ImageReference,*props);
+        std::pair<Mat, int> myPair;
+        myPair = DetectMotion(webCam_,ImageReference,*props);
+        image2 = myPair.first;
+        codeSortie = myPair.second;
         //webCam_->read(image2);
 
         // Flip to get a mirror effect - Useless, done inside the function
@@ -93,6 +125,7 @@ void MainWindow::keyPressEvent(QKeyEvent * event){
 }
 
 void MainWindow::initCV(){
+
     do{
        webCam_->read(ImageReference);
        // Mirror effect
@@ -116,14 +149,13 @@ void MainWindow::initCV(){
 
        props->subImageWidth = props->workingRect.width;
        props->subImageHeight = props->workingRect.height;
-
-       // FIXME : ça compile pas du coup j'ai mis en commentaire
-       //props->workingCenter = Point (props->workingRect.x+props->subImageWidth/2,props->workingRect.y+props->subImageHeight/2);
-
+       props->workingCenter = cv::Point (props->workingRect.x+props->subImageWidth/2,props->workingRect.y+props->subImageHeight/2);
+        props->chgtPosX(props->workingCenter.x);
+        props->chgtPosY(props->workingCenter.y);
        std::cout << "taille facesRef " <<facesRef.size()<< ' ';
 
        for (int i = 0; i < (int)facesRef.size(); i++) {
-           std::cout << "facesRef " <<facesRef.at(i)<< ' ';
+           std::cout << "facesRef " <<facesRef.at(i)<<' ';
        }
 
     }while (facesRef.size()==0);
@@ -133,15 +165,9 @@ void MainWindow::initCV(){
 
 
     props->WorkingRectNez = Rect (props->workingCenter.x - props->workingRect.width/4 , props->workingCenter.y - props->workingRect.width/4, props->workingRect.height/2 ,props->workingRect.width/2);
-    cv::cvtColor(Mat(ImageReference,props->WorkingRectNez),props->imageReduiteNezReference,COLOR_BGR2GRAY);
-
-
-
-
-
-
-
-
+    Mat tampon;
+    cv::cvtColor(Mat(ImageReference,props->WorkingRectNez),tampon,COLOR_BGR2GRAY);
+    props->chgtNezRef(tampon);
 
 
 }
@@ -150,4 +176,15 @@ void MainWindow::initCV(){
 void MainWindow::on_pushButton_clicked()
 {
     initCV();
+}
+
+int MainWindow::checkCollide(int posX,int posY, int posZ){
+
+
+    if (ok == 1)
+        return(1);
+    else
+        return(0);
+
+
 }

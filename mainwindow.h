@@ -6,6 +6,9 @@
 #include <QTimer>
 //using namespace cv;
 #include "detectmotion.h"
+#include <thread>
+#include <mutex>
+
 
 namespace Ui {
 class MainWindow;
@@ -23,11 +26,16 @@ public:
     cv::Mat ImageReference;
     cv::Mat image_gray_Reference;
     std::vector<cv::Rect> facesRef;
+    int codeSortie;
+    //void processUpdateCV(std::mutex &m);
+    std::mutex mutx;
 
 private slots:
     void updateCV();
     void initCV();
     void on_pushButton_clicked();
+    int startMultiThreadProcess(std::mutex &m);
+
 
 signals:
     void updateGLWidget(char a);
@@ -48,6 +56,7 @@ private:
     int width;
     int height;
     Properties * props;
+    int checkCollide(int posX,int posY, int posZ);
 };
 
 #endif // MAINWINDOW_H

@@ -53,6 +53,22 @@
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="statutLabel_">
+     <property name="maximumSize">
+      <size>
+       <width>380</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QPushButton" name="pushButton">
      <property name="text">
       <string>Rafraichir l'image de reference</string>
