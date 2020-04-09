@@ -149,9 +149,138 @@ void Maze::generate(bool show)
         // Display
         if (show) display(true);
     }
+
+    i_sphere = (rand() + 1) % height_;
+    j_sphere = (rand() + 1) % width_;
+    qDebug() << "sphere";
+    qDebug() << i_sphere;
+    qDebug() << j_sphere;
+
+    grid_[i_sphere][j_sphere].setSphere();
 }
 
-void Maze::display3D(){
+void Maze::display3D(float l, float c){
+
+
+    for (int i=0;i<height_;i++) {
+
+        for (int j=0;j<width_;j++) {
+
+            glPushMatrix();
+
+            glTranslated(i*c, 0, j*c);
+
+            GLfloat light_ambient[] = { 0.2, 0.2, 0.2 };
+            GLfloat light_diffuse[] = { 0.6, 0.6, 0.6 };
+            GLfloat light_emission[] = { 0.0, 0.0, 0.0 };
+            glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_emission);
+            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, light_ambient);
+            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_diffuse);
+
+            grid_[i][j].display3D(l/2, c/2, i==height_-1, j==width_-1);
+
+            glPopMatrix();
+        }
+
+    }
+
+
+    // Murs exté
+
+    glBegin(GL_QUADS);
+
+//    glColor3ub(0,0,255);    //bleu
+
+    // Mur NORD
+    if (i_sortie == 0){
+        glNormal3f(1.0, 0.0, 0.0);
+        glVertex3f(-1.0f, 1.0f, -1.0f);
+        glVertex3f(-1.0f, -1.0f, -1.0f);
+        glVertex3f(-1.0f, -1.0f, j_sortie*2 - 1.0f);
+        glVertex3f(-1.0f, 1.0f, j_sortie*2 - 1.0f);
+
+        glVertex3f(-1.0f, -1.0f, (j_sortie + 1)*2 - 1.0f);
+        glVertex3f(-1.0f, 1.0f, (j_sortie + 1)*2 - 1.0f);
+        glVertex3f(-1.0f, -1.0f, width_*2 - 1.0f);
+        glVertex3f(-1.0f, 1.0f, width_*2 - 1.0f);
+    }
+    else {
+        glNormal3f(1.0, 0.0, 0.0);
+        glVertex3f(-1.0f, 1.0f, -1.0f);
+        glVertex3f(-1.0f, -1.0f, -1.0f);
+        glVertex3f(-1.0f, -1.0f, width_*2 - 1.0f);
+        glVertex3f(-1.0f, 1.0f, width_*2 - 1.0f);
+    }
+
+    // Mur SUD
+    if (i_sortie == height_ - 1){
+        glNormal3f(-1.0, 0.0, 0.0);
+        glVertex3f(height_*2 - 1.0, 1.0f, -1.0f);
+        glVertex3f(height_*2 - 1.0, -1.0f, -1.0f);
+        glVertex3f(height_*2 - 1.0, -1.0f, j_sortie*2 - 1.0f);
+        glVertex3f(height_*2 - 1.0, 1.0f, j_sortie*2 - 1.0f);
+
+        glVertex3f(height_*2 - 1.0, -1.0f, (j_sortie + 1)*2 - 1.0f);
+        glVertex3f(height_*2 - 1.0, 1.0f, (j_sortie + 1)*2 - 1.0f);
+        glVertex3f(height_*2 - 1.0, -1.0f, width_*2 - 1.0f);
+        glVertex3f(height_*2 - 1.0, 1.0f, width_*2 - 1.0f);
+    }
+    else {
+        glNormal3f(-1.0, 0.0, 0.0);
+        glVertex3f(height_*2 - 1.0, 1.0f, -1.0f);
+        glVertex3f(height_*2 - 1.0, -1.0f, -1.0f);
+        glVertex3f(height_*2 - 1.0, -1.0f, width_*2 - 1.0f);
+        glVertex3f(height_*2 - 1.0, 1.0f, width_*2 - 1.0f);
+    }
+
+
+    // Mur EST
+    if (j_sortie == 0){
+        glNormal3f(0.0, 0.0, 1.0);
+        glVertex3f(-1.0f, 1.0f, -1.0f);
+        glVertex3f(-1.0f, -1.0f, -1.0f);
+        glVertex3f(i_sortie*2 - 1.0, -1.0f, -1.0f);
+        glVertex3f(i_sortie*2 - 1.0, 1.0f, -1.0f);
+
+        glVertex3f((i_sortie + 1)*2 - 1.0, -1.0f, -1.0f);
+        glVertex3f((i_sortie + 1)*2 - 1.0, 1.0f, -1.0f);
+        glVertex3f(height_*2 - 1.0, -1.0f, -1.0f);
+        glVertex3f(height_*2 - 1.0, 1.0f, -1.0f);
+    }
+    else {
+        glNormal3f(0.0, 0.0, 1.0);
+        glVertex3f(-1.0f, 1.0f, -1.0f);
+        glVertex3f(-1.0f, -1.0f, -1.0f);
+        glVertex3f(height_*2 - 1.0, -1.0f, -1.0f);
+        glVertex3f(height_*2 - 1.0, 1.0f, -1.0f);
+    }
+
+    // Mur OUEST
+    if (j_sortie == width_ -1){
+        glNormal3f(0.0, 0.0, -1.0);
+        glVertex3f(-1.0f, 1.0f, width_*2 - 1.0f);
+        glVertex3f(-1.0f, -1.0f, width_*2 - 1.0f);
+        glVertex3f(i_sortie*2 - 1.0, -1.0f, width_*2 - 1.0f);
+        glVertex3f(i_sortie*2 - 1.0, 1.0f, width_*2 - 1.0f);
+
+        glVertex3f((i_sortie + 1)*2 - 1.0, -1.0f, width_*2 - 1.0f);
+        glVertex3f((i_sortie + 1)*2 - 1.0, 1.0f, width_*2 - 1.0f);
+        glVertex3f(height_*2 - 1.0, -1.0f, width_*2 - 1.0f);
+        glVertex3f(height_*2 - 1.0, 1.0f, width_*2 - 1.0f);
+    }
+    else {
+        glNormal3f(0.0, 0.0, -1.0);
+        glVertex3f(-1.0f, 1.0f, width_*2 - 1.0f);
+        glVertex3f(-1.0f, -1.0f, width_*2 - 1.0f);
+        glVertex3f(height_*2 - 1.0, -1.0f, width_*2 - 1.0f);
+        glVertex3f(height_*2 - 1.0, 1.0f, width_*2 - 1.0f);
+    }
+
+    glEnd();
+
+}
+
+void Maze::display2D(QPainter * dessinateur){
 
     for (int i=0;i<height_;i++) {
 
@@ -161,11 +290,25 @@ void Maze::display3D(){
 
             glTranslated(i, 0, j);
 
-            grid_[i][j].display3D();
+            grid_[i][j].display2D(dessinateur, j * 10, i * 10);
 
             glPopMatrix();
         }
 
+    }
+}
+
+void Maze::spheretrouve(){
+
+    grid_[i_sphere][j_sphere].unsetSphere();
+
+    if (rand() % 1){
+        i_sortie = (height_ - 1) * (rand() % 1);
+        j_sortie = rand() % width_;
+    }
+    else {
+        j_sortie = (width_ - 1) * (rand() % 1);
+        i_sortie = rand() % height_;
     }
 
 }

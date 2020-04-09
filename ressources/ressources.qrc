@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>telecom_logo_quadri_longueur.png</file>
+        <file>terre.jpg</file>
+    </qresource>
+</RCC>
