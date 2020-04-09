@@ -252,13 +252,11 @@ void MazeWidget::keyPressEventCall(QKeyEvent * event)
         case Qt::Key_D:
             majVue('r');
         break;
-        case Qt::Key_D:
-            majVue('r');
-        break;
 
         case Qt::Key_Q:
             majVue('l');
         break;
+
         case Qt::Key_A:
             majVue('l');
         break;
@@ -266,15 +264,12 @@ void MazeWidget::keyPressEventCall(QKeyEvent * event)
         case Qt::Key_S:
             majVue('b');
         break;
-        case Qt::Key_S:
-            majVue('b');
-        break;
 
         case Qt::Key_Z:
             majVue('f');
         break;
-        case Qt::Key_W:
 
+        case Qt::Key_W:
         case Qt::Key_F:
             y = 10 - y;
             repaint();
