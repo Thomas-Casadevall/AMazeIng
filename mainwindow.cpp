@@ -4,6 +4,7 @@
 //#include "QLabel"
 #include <QPixmap>
 #include <iostream>
+#include <QTime>
 #include <QDebug>
 
 using namespace cv;
@@ -12,7 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     setFixedSize(670,1050);
-
+    ui->tempsDeJeuLabel_->setText(QTime::currentTime().toString());
+    //startTime = QTime::currentTime();
+    startTime = QDateTime::currentDateTime();
     timer.setInterval(10);
     timer.start();
 
@@ -48,17 +51,24 @@ MainWindow::~MainWindow()
 }
 
 int MainWindow::startMultiThreadProcess(mutex &m){
-
-    //std::thread th1([&]{this->processUpdateCV(m);});
+    //QDateTime dateTime1 = QDateTime::currentDateTime();
+    // let's say exactly 5 seconds pass here...
+    QDateTime CurrentTime = QDateTime::currentDateTime();
+    qint64 millisecondsDiff = startTime.msecsTo(CurrentTime);
+    QString test = QString::number(millisecondsDiff);
+    ui->tempsDeJeuLabel_->setText(test);
+    //ui->tempsDeJeuLabel_->setText(startTime-QTime::currentTime().toString());
     std::thread th1([&]{this->updateCV();});
     if (props->flagMajMaze == 1){
-        checkCollide(ui->maze->getPosX(),ui->maze->getPosX(),ui->maze->getPosX())
-        std::thread th2([&]{this->updateGLWidget(props->deplacementAExecuter);});
-        //updateGLWidget(props->deplacementAExecuter);
-        th2.join();
+        int collision = checkCollide(ui->maze->getPosX(),ui->maze->getPosZ(),ui->maze->getPosX());
+        if (collision == 1){
+            std::thread th2([&]{this->updateGLWidget(props->deplacementAExecuter);});
+            //updateGLWidget(props->deplacementAExecuter);
+            th2.join();
 
-        props->flagMajMaze = 0;
-        props->deplacementAExecuter = '0';
+            props->flagMajMaze = 0;
+            props->deplacementAExecuter = '0';
+        }
     }
 
     th1.join();
@@ -127,36 +137,36 @@ void MainWindow::keyPressEvent(QKeyEvent * event){
 void MainWindow::initCV(){
 
     do{
-       webCam_->read(ImageReference);
-       // Mirror effect
-       //cv::flip(ImageReference,ImageReference,1);
+        webCam_->read(ImageReference);
+        // Mirror effect
+        //cv::flip(ImageReference,ImageReference,1);
 
-       //----------------------------------------------------//
-       //    Detection du visage sur l'image de reference    //
-       //----------------------------------------------------//
+        //----------------------------------------------------//
+        //    Detection du visage sur l'image de reference    //
+        //----------------------------------------------------//
 
-       cv::cvtColor(ImageReference,image_gray_Reference,COLOR_BGR2GRAY);
-       // Equalize graylevels
-       //        equalizeHist( frame_gray, frame_gray );
+        cv::cvtColor(ImageReference,image_gray_Reference,COLOR_BGR2GRAY);
+        // Equalize graylevels
+        //        equalizeHist( frame_gray, frame_gray );
 
-       //-- Detect faces
-          facesRef.clear();
+        //-- Detect faces
+        facesRef.clear();
 
-          props->face_cascade.detectMultiScale( image_gray_Reference, facesRef, 1.1, 4, 0, Size(60, 60) );
+        props->face_cascade.detectMultiScale( image_gray_Reference, facesRef, 1.1, 4, 0, Size(60, 60) );
 
-       props->workingRect = facesRef[1];
+        props->workingRect = facesRef[1];
 
 
-       props->subImageWidth = props->workingRect.width;
-       props->subImageHeight = props->workingRect.height;
-       props->workingCenter = cv::Point (props->workingRect.x+props->subImageWidth/2,props->workingRect.y+props->subImageHeight/2);
+        props->subImageWidth = props->workingRect.width;
+        props->subImageHeight = props->workingRect.height;
+        props->workingCenter = cv::Point (props->workingRect.x+props->subImageWidth/2,props->workingRect.y+props->subImageHeight/2);
         props->chgtPosX(props->workingCenter.x);
         props->chgtPosY(props->workingCenter.y);
-       std::cout << "taille facesRef " <<facesRef.size()<< ' ';
+        std::cout << "taille facesRef " <<facesRef.size()<< ' ';
 
-       for (int i = 0; i < (int)facesRef.size(); i++) {
-           std::cout << "facesRef " <<facesRef.at(i)<<' ';
-       }
+        for (int i = 0; i < (int)facesRef.size(); i++) {
+            std::cout << "facesRef " <<facesRef.at(i)<<' ';
+        }
 
     }while (facesRef.size()==0);
 
@@ -180,7 +190,7 @@ void MainWindow::on_pushButton_clicked()
 
 int MainWindow::checkCollide(int posX,int posY, int posZ){
 
-
+    int ok = 0;
     if (ok == 1)
         return(1);
     else
