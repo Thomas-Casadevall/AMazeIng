@@ -329,6 +329,7 @@ void MazeWidget::updateView(char command){
 
     case '0':
         qDebug() << "Pas de Mouvement à effectuer";
+        paintGL();
 
         break;
     default:

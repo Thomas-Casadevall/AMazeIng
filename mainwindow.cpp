@@ -50,25 +50,22 @@ MainWindow::~MainWindow()
 }
 
 int MainWindow::startMultiThreadProcess(mutex &m){
-    //QDateTime dateTime1 = QDateTime::currentDateTime();
-    // let's say exactly 5 seconds pass here...
+
     QString TmpDeJeu = calculTempsDeJeu(startTime);
     ui->tempsDeJeuLabel_->setText(TmpDeJeu);
 
     //ui->tempsDeJeuLabel_->setText(startTime-QTime::currentTime().toString());
     std::thread th1([&]{this->updateCV();});
     qint64 millisecondsDiff = ui->maze->CurrentTimeRef.msecsTo(QDateTime::currentDateTime());
-    if (props->flagMajMaze == 1 || (millisecondsDiff>3000)){
-        //int collision = checkCollide(ui->maze->getPosX(),ui->maze->getPosZ(),ui->maze->getPosX());
-        //if (collision == 1){
-        //ui->maze->CurrentTimeRef = QDateTime::currentDateTime();
+    if (props->flagMajMaze == 1 || (millisecondsDiff>1500)){
+
         std::thread th2([&]{this->updateGLWidget(props->deplacementAExecuter);});
-        //updateGLWidget(props->deplacementAExecuter);
+
         th2.join();
 
         props->flagMajMaze = 0;
         props->deplacementAExecuter = '0';
-        //}
+
 
        }
 
@@ -95,13 +92,6 @@ QString calculTempsDeJeu(QDateTime startTime){
 
 
 
-/*
-void MainWindow::processUpdateCV(mutex &m)
-{
-
-    updateCV();
-}
-*/
 void MainWindow::updateCV(){
 
     if (webCam_->read(image1)) {   // Capture a frame
@@ -121,18 +111,13 @@ void MainWindow::updateCV(){
         // Convert to Qt image
         QImage img= QImage((const unsigned char*)(image2.data),image2.cols,image2.rows,QImage::Format_RGB888);
 
-        //Fonctions regroupées dans la section Resize.
-        //img.scaledToHeight(ui->imageLabel_->size().height());
-        //img.scaledToWidth(ui->imageLabel_->size().width());
-
 
         ui->imageLabel_->setPixmap(QPixmap::fromImage(img));
+
         // Resize the label to fit the image
-
-
         ui->imageLabel_->resize(ui->imageLabel_->pixmap()->size());
 
-        //img.scaled(ui->imageLabel_->size().height(),ui->imageLabel_->size().width(),Qt::KeepAspectRatio);
+
 
 
     }
@@ -142,10 +127,12 @@ void MainWindow::updateCV(){
 
 
     qint64 millisecondsDiff = ui->maze->CurrentTimeRef.msecsTo(QDateTime::currentDateTime());
-    qDebug()<<millisecondsDiff;
-    if (millisecondsDiff>2000){
+    //qDebug()<<millisecondsDiff;
+    if (millisecondsDiff>1500){
         ui->maze->miniMap->affichageAutorise=0;
-        //ui->maze->miniMap->dessine(ui->maze->getPosX(), ui->maze->getPosX(), ui->maze->getAngleVue());
+
+
+
     }
     else
         ui->maze->miniMap->affichageAutorise=1;

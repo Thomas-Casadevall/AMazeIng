@@ -11,7 +11,7 @@ Cell::Cell(){
 }
 
 Cell::~Cell(){
-qDebug()<<"destruction de Cell";
+//qDebug()<<"destruction de Cell";
     if(sphere)
         gluDeleteQuadric(quad);
 }
@@ -183,7 +183,7 @@ void Cell::display3D(float l, float c, bool ignore_S, bool ignore_E){
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, texture); // On définit la texture courante
         gluSphere(quad, 0.7, 20, 20);
-        qDebug()<<ValTest;
+        //qDebug()<<ValTest;
         glDisable(GL_TEXTURE_2D);
 
     }

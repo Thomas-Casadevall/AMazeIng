@@ -23,7 +23,7 @@ Maze::Maze(int width, int height)
 
 }
 Maze::~Maze(){
-qDebug()<<"destruction de Maze";
+//qDebug()<<"destruction de Maze";
 }
 
 void Maze::init(float l_, float c_, int width, int height){
