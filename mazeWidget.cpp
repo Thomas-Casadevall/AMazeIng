@@ -328,7 +328,7 @@ void MazeWidget::updateView(char command){
         break;
 
     case '0':
-        qDebug() << "Pas de Mouvement à effectuer";
+        //qDebug() << "Pas de Mouvement à effectuer";
         paintGL();
 
         break;
@@ -378,7 +378,7 @@ void MazeWidget::majVue(char command){
         break;
 
     case '0':
-        qDebug() << "Pas de Mouvement à effectuer";
+        //qDebug() << "Pas de Mouvement à effectuer";
 
         break;
     default:
