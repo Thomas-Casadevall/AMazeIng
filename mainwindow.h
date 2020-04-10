@@ -61,4 +61,10 @@ private:
     QDateTime startTime;
 };
 
+
+
+
+QString calculTempsDeJeu(QDateTime startTime);
+
+
 #endif // MAINWINDOW_H

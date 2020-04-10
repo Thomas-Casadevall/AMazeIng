@@ -31,8 +31,9 @@ private:
 //    bool sortie;
 
     // sphere
+    //GLUquadric* quadriqueSphere1;
     GLUquadric *quad;
-    GLuint texture;
+    GLuint texture=0;
 
 //    unsigned int r=0, g=0, b=255; // Bleu
 

@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     timer.start();
 
     // Connexion du timer à la MaJ d'OpenCV
-    //connect(&timer,  &QTimer::timeout, this,    [&]{ this->startMultiThreadProcess(mutx); });
+    connect(&timer,  &QTimer::timeout, this,    [&]{ this->startMultiThreadProcess(mutx); });
 
     // Connexion du timer à la MaJ de MazeWidget
     connect(this,  &MainWindow::updateGLWidget, ui->maze,    &MazeWidget::updateView);
@@ -36,7 +36,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->statutLabel_->setText("Démarrage...");
 
 
-    //
     props = new Properties (webCam_);
     initCV();
 
@@ -53,10 +52,9 @@ MainWindow::~MainWindow()
 int MainWindow::startMultiThreadProcess(mutex &m){
     //QDateTime dateTime1 = QDateTime::currentDateTime();
     // let's say exactly 5 seconds pass here...
-    QDateTime CurrentTime = QDateTime::currentDateTime();
-    qint64 millisecondsDiff = startTime.msecsTo(CurrentTime);
-    QString test = QString::number(millisecondsDiff);
-    ui->tempsDeJeuLabel_->setText(test);
+    QString TmpDeJeu = calculTempsDeJeu(startTime);
+    ui->tempsDeJeuLabel_->setText(TmpDeJeu);
+
     //ui->tempsDeJeuLabel_->setText(startTime-QTime::currentTime().toString());
     std::thread th1([&]{this->updateCV();});
     if (props->flagMajMaze == 1){
@@ -78,6 +76,17 @@ int MainWindow::startMultiThreadProcess(mutex &m){
 }
 
 
+QString calculTempsDeJeu(QDateTime startTime){
+    QDateTime CurrentTime = QDateTime::currentDateTime();
+    qint64 millisecondsDiff = startTime.msecsTo(CurrentTime);
+    qint64 minutes = floor(millisecondsDiff/60000);
+    qint64 secondes = floor(millisecondsDiff/1000);
+    secondes = secondes - minutes*60;
+    QString test = QString::number(minutes);
+    QString test2 = QString::number(secondes);
+    QString test3 = "Temps de jeu : "+test+" min "+test2+" sec";
+    return test3;
+}
 
 
 
