@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Connexion du timer à la MaJ d'OpenCV
     connect(&timer,  &QTimer::timeout, this,    [&]{ this->startMultiThreadProcess(mutx); });
 
-    // Connexion du timer à la MaJ de MazeWidget
+    // Connexion d'UpdateView à la MaJ de MazeWidget
     connect(this,  &MainWindow::updateGLWidget, ui->maze,    &MazeWidget::updateView);
 
     connect(ui->maze, &MazeWidget::onArrete, [&] {exit(0);});
@@ -57,17 +57,22 @@ int MainWindow::startMultiThreadProcess(mutex &m){
 
     //ui->tempsDeJeuLabel_->setText(startTime-QTime::currentTime().toString());
     std::thread th1([&]{this->updateCV();});
-    if (props->flagMajMaze == 1){
-        int collision = checkCollide(ui->maze->getPosX(),ui->maze->getPosZ(),ui->maze->getPosX());
-        if (collision == 1){
-            std::thread th2([&]{this->updateGLWidget(props->deplacementAExecuter);});
-            //updateGLWidget(props->deplacementAExecuter);
-            th2.join();
+    qint64 millisecondsDiff = ui->maze->CurrentTimeRef.msecsTo(QDateTime::currentDateTime());
+    if (props->flagMajMaze == 1 || (millisecondsDiff>3000)){
+        //int collision = checkCollide(ui->maze->getPosX(),ui->maze->getPosZ(),ui->maze->getPosX());
+        //if (collision == 1){
+        //ui->maze->CurrentTimeRef = QDateTime::currentDateTime();
+        std::thread th2([&]{this->updateGLWidget(props->deplacementAExecuter);});
+        //updateGLWidget(props->deplacementAExecuter);
+        th2.join();
 
-            props->flagMajMaze = 0;
-            props->deplacementAExecuter = '0';
-        }
-    }
+        props->flagMajMaze = 0;
+        props->deplacementAExecuter = '0';
+        //}
+
+       }
+
+
 
     th1.join();
     return(0);
@@ -134,6 +139,18 @@ void MainWindow::updateCV(){
     else {
         ui->imageLabel_->setText("Error capturing the frame");
     }
+
+
+    qint64 millisecondsDiff = ui->maze->CurrentTimeRef.msecsTo(QDateTime::currentDateTime());
+    qDebug()<<millisecondsDiff;
+    if (millisecondsDiff>2000){
+        ui->maze->miniMap->affichageAutorise=0;
+        //ui->maze->miniMap->dessine(ui->maze->getPosX(), ui->maze->getPosX(), ui->maze->getAngleVue());
+    }
+    else
+        ui->maze->miniMap->affichageAutorise=1;
+
+
 
 }
 

@@ -10,7 +10,7 @@
 #include <GL/glu.h>
 #include <QColor>
 #include <QGraphicsOpacityEffect>
-
+#include <QTime>
 #include <Maze/cell.h>
 #include <Maze/maze.h>
 #include "minimap.h"
@@ -39,6 +39,10 @@ public:
     int getPosX()const{return pos_x;};
     int getPosY()const{return pos_y;};
     int getPosZ()const{return pos_z;};
+    int getAngleVue()const{return angleVue;};
+
+    MiniMap *miniMap;
+    QDateTime CurrentTimeRef;
 
 protected:
 
@@ -65,12 +69,15 @@ private:
     Maze laby;
     int width_l = 10, height_l = 6;
 
-    MiniMap *miniMap;
+
 
     QGraphicsOpacityEffect * effect;
 
-public slots:
 
+
+
+public slots:
+    void newGame();
     void updateView(char command);
 
 signals:

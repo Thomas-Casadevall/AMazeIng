@@ -1,12 +1,13 @@
 #define _USE_MATH_DEFINES
 
 #include "mazeWidget.h"
-
+#include <QWidget>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <cmath>
 #include <random>
 #include <QDebug>
+#include <QObject>
 
 // PI
 #define PI 3.14159265
@@ -21,6 +22,8 @@ const double PAS_DEPLACEMENT    = 0.5;
 // Constructeur
 MazeWidget::MazeWidget(QWidget * parent) : QOpenGLWidget(parent)
 {
+
+
     // ---Reglage de la taille/position de l'écran
     width = WIN_WIDTH;
     height = WIN_HEIGHT;
@@ -38,10 +41,14 @@ MazeWidget::MazeWidget(QWidget * parent) : QOpenGLWidget(parent)
     miniMap = new MiniMap(&laby, c, this);
     miniMap->raise();
     miniMap->show();
+    CurrentTimeRef = QDateTime::currentDateTime();
 
     effect = new QGraphicsOpacityEffect(miniMap);
     effect->setOpacity(0.5);
     miniMap->setGraphicsEffect(effect);
+
+    // Connexion de detectition de fin de partie à
+    //connect(laby,  &Maze::nouvellePartie, this,    &MazeWidget::newGame);
 }
 
 MazeWidget::~MazeWidget(){
@@ -57,13 +64,13 @@ void MazeWidget::initializeGL()
 
     // Activation des buffers
     glEnable(GL_DEPTH_TEST);
-//    glEnable(GL_COLOR_MATERIAL);
+    //    glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
 
-    GLfloat light0_diffuse[] = { 0.0, 0.0, 0.0 };
-    GLfloat light0_ambiant[] = { 1.0, 1.0, 1.0 };
-    GLfloat light0_specular[] = { 0.0, 0.0, 0.0 };
+    GLfloat light0_diffuse[] = { 0.5, 0.5, 0.5 ,1.0 };
+    GLfloat light0_ambiant[] = { 0.5, 0.5, 0.5 ,1.0 };
+    GLfloat light0_specular[] = { 0.5, 0.5, 0.5 ,1.0 };
 
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
     glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambiant);
@@ -71,33 +78,40 @@ void MazeWidget::initializeGL()
 
     glEnable(GL_LIGHT0); // Allume la 1ere lumière
 
-    GLfloat light1_diffuse[] = { 0.8, 0.8, 0.8 };
-    GLfloat light1_ambiant[] = { 0.0, 0.0, 0.0 };
-    GLfloat light1_specular[] = { 0.0, 0.0, 0.0 };
+    GLfloat light1_diffuse[] = { 0.1, 0.1, 0.1,1.0 };
+    //GLfloat light1_ambiant[] = { 1.0, 0.2, 0.2,0.0 };
+    GLfloat light1_specular[] = { 0.1, 0.1, 0.1,1.0 };
 
     glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
-    glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambiant);
+    //glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambiant);
     glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
 
     glEnable(GL_LIGHT1); // Allume la 2ème lumière
 
 
 
-//    GLfloat light2_position[] = { 1.0, 1.0, 0.0, 0.0 };
+    //    GLfloat light2_position[] = { 1.0, 1.0, 0.0, 0.0 };
     GLfloat light2_diffuse[] = { 1.0, 1.0, 1.0 };
     GLfloat light2_ambiant[] = { 0.0, 0.0, 0.0 };
     GLfloat light2_specular[] = { 0.0, 0.0, 0.0 };
 
 
-//    glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
+    //    glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
     glLightfv(GL_LIGHT2, GL_DIFFUSE, light2_diffuse);
     glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambiant);
     glLightfv(GL_LIGHT2, GL_SPECULAR, light2_specular);
 
-    glEnable(GL_LIGHT2); // Allume la 2ème lumière
+    glDisable(GL_LIGHT2); // Allume la 3ème lumière
 
 }
 
+
+void MazeWidget::newGame(){
+
+    laby.init(l, c, width_l, height_l);
+    laby.generate();
+
+}
 
 // Fonction de redimensionnement
 void MazeWidget::resizeGL(int w, int h)
@@ -119,6 +133,7 @@ void MazeWidget::resizeGL(int w, int h)
 // Fonction d'affichage
 void MazeWidget::paintGL()
 {
+
     // -- Reinitialisation des tampons
     glClear(GL_COLOR_BUFFER_BIT); // Effacer le buffer de couleur
     glClear(GL_DEPTH_BUFFER_BIT); // clear le Z buffer
@@ -141,10 +156,10 @@ void MazeWidget::paintGL()
 
     // -- Lumière --
 
-    GLfloat light0_position[] = { 1.2, 1.0, 1.0, 0.0 };
+    GLfloat light0_position[] = { (float)laby.geti_sphere(), (float)laby.getj_sphere(), 0.0, 1.0 };
     glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
 
-    GLfloat light1_position[] = { 1, 1.0, 2.0, 0.0 };
+    GLfloat light1_position[] = { 10.0, 10.0, 10.0, 0.0 };
     glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
 
     GLfloat light2_position[] = { -1.5, 1.0, -1.5, 1.0 };
@@ -167,7 +182,7 @@ void MazeWidget::paintGL()
     GLfloat light_sol_diffuse[] = { 0.0, 0.0, 0.0 };
     GLfloat light_sol_emission[] = { 0.0, 0.0, 0.0 };
 
-
+    /*
     glBegin(GL_QUADS);
 
     glNormal3f(0.0, 1.0, 0.0);
@@ -194,7 +209,7 @@ void MazeWidget::paintGL()
 
 
     glEnd();
-
+*/
 
 
     // -- Maj de la minimap
@@ -209,46 +224,56 @@ void MazeWidget::keyPressEventCall(QKeyEvent * event)
 
     switch(event->key())
     {
-        // Rien
-        case Qt::Key_Return:
-            qDebug() << "Entrée";
+    // Rien
+    case Qt::Key_Return:
+        qDebug() << "Entrée";
         break;
 
         // Sortie de l'application
-        case Qt::Key_Escape:
-            onArrete();
+    case Qt::Key_Escape:
+        onArrete();
 
-        case Qt::Key_D:
-            majVue('r');
+    case Qt::Key_D:
+        CurrentTimeRef = QDateTime::currentDateTime();
+        majVue('r');
         break;
 
-        case Qt::Key_Q:
-            majVue('l');
+    case Qt::Key_Q:
+        CurrentTimeRef = QDateTime::currentDateTime();
+        majVue('l');
         break;
 
-        case Qt::Key_A:
-            majVue('l');
+    case Qt::Key_A:
+        CurrentTimeRef = QDateTime::currentDateTime();
+        majVue('l');
         break;
 
-        case Qt::Key_S:
-            majVue('b');
+    case Qt::Key_S:
+        CurrentTimeRef = QDateTime::currentDateTime();
+        majVue('b');
         break;
 
-        case Qt::Key_Z:
-            majVue('f');
+    case Qt::Key_Z:
+        CurrentTimeRef = QDateTime::currentDateTime();
+        majVue('f');
         break;
 
-        case Qt::Key_W:
-        case Qt::Key_F:
-            y = 10 - y;
-            repaint();
+    case Qt::Key_W:
+        CurrentTimeRef = QDateTime::currentDateTime();
+        majVue('f');
+
+        break;
+
+    case Qt::Key_F:
+        y = 10 - y;
+        repaint();
         break;
 
         // Cas par defaut
-        default:
-            // Ignorer l'evenement
-            qDebug()<<"event ignoré";
-            event->ignore();
+    default:
+        // Ignorer l'evenement
+        qDebug()<<"event ignoré";
+        event->ignore();
         break;
 
         return;
@@ -257,9 +282,9 @@ void MazeWidget::keyPressEventCall(QKeyEvent * event)
     // Acceptation de l'evenement
     event->accept();
 
-//    qDebug() << angleVue;
+    //    qDebug() << angleVue;
 
-//    qDebug() << pos_x << pos_z;
+    //    qDebug() << pos_x << pos_z;
 }
 
 void MazeWidget::updateView(char command){
@@ -267,43 +292,49 @@ void MazeWidget::updateView(char command){
     switch (command) {
 
     case 'f':
+        CurrentTimeRef = QDateTime::currentDateTime();
         if (laby.gestionPos(pos_x + angle2x(), pos_z + angle2z())){
             pos_x += angle2x();
             pos_z += angle2z();
             repaint();
         }
-    break;
+        break;
 
     case 'b':
+        CurrentTimeRef = QDateTime::currentDateTime();
         if (laby.gestionPos(pos_x - angle2x(), pos_z - angle2z())){
             pos_x -= angle2x();
             pos_z -= angle2z();
             repaint();
         }
-    break;
+        break;
 
     case 'l':
+        CurrentTimeRef = QDateTime::currentDateTime();
         if (angleVue < PAS_VUE)
             angleVue = 360 - PAS_VUE + angleVue;
         else
             angleVue-=PAS_VUE;
         repaint();
-    break;
+        break;
 
     case 'r':
+        CurrentTimeRef = QDateTime::currentDateTime();
         if (angleVue > 360 - PAS_VUE)
             angleVue = 360 + PAS_VUE - angleVue;
         else
             angleVue+=PAS_VUE;
         repaint();
-    break;
+        break;
 
     case '0':
         qDebug() << "Pas de Mouvement à effectuer";
-    break;
+
+        break;
     default:
         qDebug() << "error";
-    break;
+
+        break;
     }
 
 }
@@ -314,39 +345,44 @@ void MazeWidget::majVue(char command){
     switch (command) {
 
     case 'f':
+        CurrentTimeRef = QDateTime::currentDateTime();
         if (laby.gestionPos(pos_x + angle2x(), pos_z + angle2z())){
             pos_x += angle2x();
             pos_z += angle2z();
         }
-    break;
+        break;
 
     case 'b':
+        CurrentTimeRef = QDateTime::currentDateTime();
         if (laby.gestionPos(pos_x - angle2x(), pos_z - angle2z())){
             pos_x -= angle2x();
             pos_z -= angle2z();
         }
-    break;
+        break;
 
     case 'l':
+        CurrentTimeRef = QDateTime::currentDateTime();
         if (angleVue < PAS_VUE)
             angleVue = 360 - PAS_VUE + angleVue;
         else
             angleVue-=PAS_VUE;
-    break;
+        break;
 
     case 'r':
+        CurrentTimeRef = QDateTime::currentDateTime();
         if (angleVue > 360 - PAS_VUE)
             angleVue = 360 + PAS_VUE - angleVue;
         else
             angleVue+=PAS_VUE;
-    break;
+        break;
 
     case '0':
         qDebug() << "Pas de Mouvement à effectuer";
-    break;
+
+        break;
     default:
         qDebug() << "error";
-    break;
+        break;
     }
 
     repaint();

@@ -13,6 +13,7 @@ public:
     explicit MiniMap(Maze* laby_, float c, QWidget *parent = nullptr);
 
     void dessine(double pos_x, double pos_y, int angleVue_);
+    int affichageAutorise = 0;
 
 signals:
 

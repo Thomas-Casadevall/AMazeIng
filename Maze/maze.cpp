@@ -17,9 +17,10 @@ using namespace std;
 Maze::Maze(int width, int height)
     : grid_(height,vector<Cell>(width)), width_(width), height_(height)
 {
- cout<<"test"<<endl;
- Cell::E;
-  cout<<"FinTest"<<endl;
+
+
+
+
 }
 Maze::~Maze(){
 qDebug()<<"destruction de Maze";
@@ -173,9 +174,10 @@ void Maze::generate(bool show)
 
 void Maze::display3D(){
 
-    GLfloat light_ambient[] = { 0.2, 0.2, 0.2 };
-    GLfloat light_diffuse[] = { 0.6, 0.6, 0.6 };
-    GLfloat light_emission[] = { 0.0, 0.0, 0.0 };
+    GLfloat light_ambient[] = { 0.5, 0.5, 0.5,1.0};
+    //GLfloat light_diffuse[] = { 0.5, 0.5, 0.5,1.0};
+    GLfloat light_emission[] = { 0.0, 0.0, 0.0 ,1.0};
+    GLfloat light_specular[] = { 0.5, 0.5, 0.5 ,1.0};
 
     for (int i=0;i<height_;i++) {
 
@@ -186,8 +188,11 @@ void Maze::display3D(){
             glTranslated(i*c, 0, j*c);
 
             glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_emission);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, light_ambient);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_diffuse);
+            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, light_ambient);
+            //glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_diffuse);
+            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, light_specular);
+            //glMaterialfv(GL_FRONT, GL_SHININESS, 0);
+
 
             grid_[i][j].display3D(l/2, c/2, i==0, j==0);
 
@@ -271,6 +276,11 @@ bool Maze::gestionPos(double pos_x, double pos_y){
             if (pos_x > (i_sortie * c - c/2) && pos_x < (i_sortie * c) &&
                 pos_y > (j_sortie * c - c/2 + l) && pos_y < (j_sortie * c + c/2 - l)){
                 // call victoire
+                //A faire: Ajout de message de victoire : PB Pas de signal (car objet pas derivé de la classe QObject!!!
+                //+gestion de changement de parametres. - Ajouter une fonction?
+                init(l, c, width_, height_);
+                generate();
+
                 return false;
             }
             break;

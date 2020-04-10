@@ -26,7 +26,7 @@ public:
 private:
     int value_=EMPTY;
     bool frontier[4]={true,true,true,true};
-
+    QImage image;
     int sphere;
 //    bool sortie;
 
@@ -40,7 +40,7 @@ private:
 public:
     Cell();
     ~Cell();
-
+    int ValTest=0;
     int getValue() const {return value_;}
     bool isFrontier(Direction d) const {return frontier[d];}
     void setValue(int type) {value_=type;}

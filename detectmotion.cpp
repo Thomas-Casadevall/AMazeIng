@@ -49,7 +49,7 @@ Properties::~Properties(){
 
 void Properties::CheckMove(Point vecteur){
     if (abs(vecteur.x)>abs(vecteur.y)){
-        if (abs(vecteur.x)<50 && abs(vecteur.x)>15 ){
+        if (abs(vecteur.x)<60 && abs(vecteur.x)>25 ){
             flagMajMaze = 1;
             if (vecteur.x>0){
                 std::cout<<"gauche"<<std::endl;
@@ -65,7 +65,7 @@ void Properties::CheckMove(Point vecteur){
 
     }
     else if (abs(vecteur.x)<abs(vecteur.y)){
-        if (abs(vecteur.y)<50 && abs(vecteur.y)>15 ){
+        if (abs(vecteur.y)<60 && abs(vecteur.y)>25 ){
             flagMajMaze = 1;
             if (vecteur.y>0){
                 std::cout<<"bas"<<std::endl;
@@ -245,8 +245,8 @@ std::pair<Mat, int> DetectMotion(cv::VideoCapture * webCam_,Mat imageReference,P
     Point p(props.workingCenter.x+vect.x,props.workingCenter.y+vect.y);
     arrowedLine(image2,props.workingCenter,p,Scalar(255,255,255),2);
 */
-    std::cout <<  "-y-" << props.oldVectY << "---" << std::endl;
-    std::cout <<  "-x-" << props.oldVectX << "---" << std::endl;
+    //std::cout <<  "-y-" << props.oldVectY << "---" << std::endl;
+   // std::cout <<  "-x-" << props.oldVectX << "---" << std::endl;
     //if (sqrt(pow(vect.y-props.oldVectY,2)+pow(vect.x-props.oldVectX,2))<=30){
 
     props.oldVectX = vect.x;
@@ -457,7 +457,7 @@ std::pair<Mat, int> DetectMotion(cv::VideoCapture * webCam_,Mat imageReference,P
     //swap(imageReduiteReference,imageReduiteCapture);
 
     // the camera will be deinitialized automatically in VideoCapture destructor
-    std::cout <<" test " << std::endl;
+    //std::cout <<" test " << std::endl;
     return {image2,0};
     //return imageReduiteTest;
 

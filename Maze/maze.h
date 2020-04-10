@@ -42,12 +42,17 @@ public:
     ~Maze();
     int getWidth(){return width_;};
     int getHeight(){return height_;};
+    int geti_sphere()const{return i_sphere;};
+    int getj_sphere()const{return j_sphere;};
+    void init(float l_, float c_, int width, int height);
     void reinit(int width = 10,int height = 6);
     void display(bool pause=false);
     void display3D();
     void display2D(QPainter * dessinateur);
     void generate(bool show=false);
     bool gestionPos(double pos_x, double pos_y);
+signals:
+     void nouvellePartie();
 };
 
 #endif // MAZE_H
