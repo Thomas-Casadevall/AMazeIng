@@ -36,7 +36,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->statutLabel_->setText("Démarrage...");
 
 
-
     props = new Properties (webCam_);
     initCV();
 

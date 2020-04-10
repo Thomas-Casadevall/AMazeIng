@@ -26,6 +26,7 @@ class Maze
 
     int i_sphere, j_sphere;
     int i_sortie = -1, j_sortie = -1;
+    Cell::Direction dir_sort;
 
     void addFrontier(Point p,list<Point> & frontier);
     void mark(Point p,list<Point> & frontier);
@@ -34,6 +35,8 @@ class Maze
 
     void spheretrouve();
 
+    float l, c;
+
 public:
     Maze(int width = 10,int height = 6);
     ~Maze();
@@ -41,10 +44,10 @@ public:
     int getHeight(){return height_;};
     void reinit(int width = 10,int height = 6);
     void display(bool pause=false);
-    void display3D(float l, float c);
+    void display3D();
     void display2D(QPainter * dessinateur);
     void generate(bool show=false);
-    void gestionPos(double pos_x, double pos_y);
+    bool gestionPos(double pos_x, double pos_y);
 };
 
 #endif // MAZE_H

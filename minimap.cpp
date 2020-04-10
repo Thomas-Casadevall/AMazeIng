@@ -27,7 +27,7 @@ void MiniMap::paintEvent(QPaintEvent *){
     QPainter dessinateur(this);
 
     dessinateur.setPen(Qt::red);
-    dessinateur.setWindow(0, laby->getHeight() * 10, laby->getWidth() * 10, -laby->getHeight() * 10);
+    dessinateur.setWindow(-2, laby->getHeight() * 10 + 2, laby->getWidth() * 10 + 2, -laby->getHeight() * 10 - 2);
 
 
     laby->display2D(& dessinateur);
@@ -36,8 +36,8 @@ void MiniMap::paintEvent(QPaintEvent *){
     dessinateur.setPen(Qt::red);
 
     // position du joueur
-    int posy = pos_y / c * 10 + 4;
-    int posx = pos_x / c * 10 + 4;
+    int posy = pos_y / c * 10 + 5;
+    int posx = pos_x / c * 10 + 5;
     dessinateur.drawEllipse(QPoint(posy, posx), 2, 2);
 
     // longueur de la ligne représentant l'angle de vue

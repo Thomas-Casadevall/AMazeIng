@@ -14,7 +14,6 @@
 // Declarations des constantes
 const unsigned int WIN_WIDTH    = 1600;
 const unsigned int WIN_HEIGHT   = 900;
-const float MAX_DIMENSION       = 50.0f;
 const unsigned int PAS_VUE      = 10;
 const double PAS_DEPLACEMENT    = 0.5;
 
@@ -31,6 +30,7 @@ MazeWidget::MazeWidget(QWidget * parent) : QOpenGLWidget(parent)
 
 
     // ---on génère le labyrinthe
+    laby.init(l, c, width_l, height_l);
     laby.generate();
 
 
@@ -126,7 +126,7 @@ void MazeWidget::paintGL()
     // -- Definition de la matrice modelview
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(80.0f, ((float)width)/height, 0.1f, 20.0f);
+    gluPerspective(80.0f, ((float)width)/height, 0.1f, 50.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -142,49 +142,19 @@ void MazeWidget::paintGL()
     // -- Lumière --
 
     GLfloat light0_position[] = { 1.2, 1.0, 1.0, 0.0 };
-//    GLfloat light0_diffuse[] = { 1.0, 1.0, 1.0 };
-//    GLfloat light0_ambiant[] = { 1.0, 1.0, 1.0 };
-//    GLfloat light0_specular[] = { 0.0, 0.0, 0.0 };
-
     glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
-//    glLightfv(GL_LIGHT0, GL_DIFFUSE, light0_diffuse);
-//    glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambiant);
-//    glLightfv(GL_LIGHT0, GL_SPECULAR, light0_specular);
-
-//    glEnable(GL_LIGHT0); // Allume la 1ere lumière
-
-
 
     GLfloat light1_position[] = { 1, 1.0, 2.0, 0.0 };
-//    GLfloat light1_diffuse[] = { 0.3, 0.3, 0.3 };
-//    GLfloat light1_ambiant[] = { 0.0, 0.0, 0.0 };
-//    GLfloat light1_specular[] = { 0.0, 0.0, 0.0 };
-
     glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
-//    glLightfv(GL_LIGHT1, GL_DIFFUSE, light1_diffuse);
-//    glLightfv(GL_LIGHT1, GL_AMBIENT, light1_ambiant);
-//    glLightfv(GL_LIGHT1, GL_SPECULAR, light1_specular);
-
-//    glEnable(GL_LIGHT1); // Allume la 2ème lumière
-
-
 
     GLfloat light2_position[] = { -1.5, 1.0, -1.5, 1.0 };
-//    GLfloat light2_diffuse[] = { 1.0, 1.0, 1.0 };
-//    GLfloat light2_ambiant[] = { 0.0, 0.0, 0.0 };
-//    GLfloat light2_specular[] = { 0.0, 0.0, 0.0 };
-
     glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
-//    glLightfv(GL_LIGHT2, GL_DIFFUSE, light2_diffuse);
-//    glLightfv(GL_LIGHT2, GL_AMBIENT, light2_ambiant);
-//    glLightfv(GL_LIGHT2, GL_SPECULAR, light2_specular);
 
-//    glEnable(GL_LIGHT2); // Allume la 2ème lumière
 
 
 
     // -- Affichage du labyrinthe 3D
-    laby.display3D(l, c);
+    laby.display3D();
 
 
 
@@ -207,23 +177,23 @@ void MazeWidget::paintGL()
     glMaterialfv(GL_FRONT, GL_AMBIENT, light_sol_ambient);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, light_sol_diffuse);
 
-    glVertex3f(-1.0f, -1.0f, laby.getWidth() * 2 - 1);
-    glVertex3f(laby.getHeight() * 2 - 1, -1.0f, laby.getWidth() * 2 - 1);
-    glVertex3f(laby.getHeight() * 2 - 1, -1.0f, -1.0f);
-    glVertex3f(-1.0f, -1.0f, -1.0f);
+    glVertex3f(- c/2, -1.0f, laby.getWidth() * c - c/2);
+    glVertex3f(laby.getHeight() * c - c/2, -1.0f, laby.getWidth() * c - c/2);
+    glVertex3f(laby.getHeight() * c - c/2, -1.0f, - c/2);
+    glVertex3f(- c/2, -1.0f, - c/2);
 
 
-//    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_plaf_emission);
-//    glMaterialfv(GL_FRONT, GL_AMBIENT, light_plaf_ambient);
-//    glMaterialfv(GL_FRONT, GL_DIFFUSE, light_plaf_diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_plaf_emission);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, light_plaf_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, light_plaf_diffuse);
 
-//    glVertex3f(-1.0f, 1.0f, laby.getWidth() * 2 - 1);
-//    glVertex3f(laby.getHeight() * 2 - 1, 1.0f, laby.getWidth() * 2 - 1);
-//    glVertex3f(laby.getHeight() * 2 - 1, 1.0f, -1.0f);
-//    glVertex3f(-1.0f, 1.0f, -1.0f);
+    glVertex3f(- c/2, 1.0f, laby.getWidth() * c - c/2);
+    glVertex3f(laby.getHeight() * c - c/2, 1.0f, laby.getWidth() * c - c/2);
+    glVertex3f(laby.getHeight() * c - c/2, 1.0f, - c/2);
+    glVertex3f(- c/2, 1.0f, - c/2);
+
 
     glEnd();
-
 
 
 
@@ -236,7 +206,6 @@ void MazeWidget::paintGL()
 // Fonction de gestion d'interactions clavier
 void MazeWidget::keyPressEventCall(QKeyEvent * event)
 {
-    qDebug() << event->key();
 
     switch(event->key())
     {
@@ -298,13 +267,19 @@ void MazeWidget::updateView(char command){
     switch (command) {
 
     case 'f':
-        pos_x += 0.04;
-        repaint();
+        if (laby.gestionPos(pos_x + angle2x(), pos_z + angle2z())){
+            pos_x += angle2x();
+            pos_z += angle2z();
+            repaint();
+        }
     break;
 
     case 'b':
-        pos_x -= 0.04;
-        repaint();
+        if (laby.gestionPos(pos_x - angle2x(), pos_z - angle2z())){
+            pos_x -= angle2x();
+            pos_z -= angle2z();
+            repaint();
+        }
     break;
 
     case 'l':
@@ -323,6 +298,9 @@ void MazeWidget::updateView(char command){
         repaint();
     break;
 
+    case '0':
+        qDebug() << "Pas de Mouvement à effectuer";
+    break;
     default:
         qDebug() << "error";
     break;
@@ -336,13 +314,17 @@ void MazeWidget::majVue(char command){
     switch (command) {
 
     case 'f':
-        pos_x += angle2x();
-        pos_z += angle2z();
+        if (laby.gestionPos(pos_x + angle2x(), pos_z + angle2z())){
+            pos_x += angle2x();
+            pos_z += angle2z();
+        }
     break;
 
     case 'b':
-        pos_x -= angle2x();
-        pos_z -= angle2z();
+        if (laby.gestionPos(pos_x - angle2x(), pos_z - angle2z())){
+            pos_x -= angle2x();
+            pos_z -= angle2z();
+        }
     break;
 
     case 'l':
@@ -367,7 +349,6 @@ void MazeWidget::majVue(char command){
     break;
     }
 
-    laby.gestionPos(pos_x, pos_z);
     repaint();
 }
 
