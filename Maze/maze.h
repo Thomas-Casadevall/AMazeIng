@@ -37,6 +37,8 @@ class Maze
 
     float l, c;
 
+    bool victoire = false;
+
 public:
     Maze(int width = 10,int height = 6);
     ~Maze();
@@ -51,6 +53,7 @@ public:
     void display2D(QPainter * dessinateur);
     void generate(bool show=false);
     bool gestionPos(double pos_x, double pos_y);
+    bool getVictoire() {return victoire;};
 signals:
      void nouvellePartie();
 };

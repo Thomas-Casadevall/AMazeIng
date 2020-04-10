@@ -34,6 +34,8 @@ public:
     // Fonction du labyrinthe
     void majVue(char command);
 
+    void finDePartie();
+
     double angle2x();
     double angle2z();
     int getPosX()const{return pos_x;};

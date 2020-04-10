@@ -38,6 +38,7 @@ void Maze::reinit(int width, int height)
 {
     width_ = width;
     height_ = height;
+    victoire = false;
     grid_=vector<vector<Cell>>(height_,vector<Cell>(width_));
 }
 
@@ -174,10 +175,10 @@ void Maze::generate(bool show)
 
 void Maze::display3D(){
 
-    GLfloat light_ambient[] = { 0.5, 0.5, 0.5,1.0};
-    //GLfloat light_diffuse[] = { 0.5, 0.5, 0.5,1.0};
-    GLfloat light_emission[] = { 0.0, 0.0, 0.0 ,1.0};
-    GLfloat light_specular[] = { 0.5, 0.5, 0.5 ,1.0};
+    GLfloat light_ambient[] = { 0.2, 0.2, 0.2 };
+    GLfloat light_diffuse[] = { 0.6, 0.6, 0.6 };
+    GLfloat light_emission[] = { 0.0, 0.0, 0.0 };
+    GLfloat light_specular[] = { 0.0, 0.0, 0.0 };
 
     for (int i=0;i<height_;i++) {
 
@@ -188,10 +189,10 @@ void Maze::display3D(){
             glTranslated(i*c, 0, j*c);
 
             glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_emission);
-            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, light_ambient);
-            //glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_diffuse);
+            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, light_ambient);
+            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_diffuse);
             glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, light_specular);
-            //glMaterialfv(GL_FRONT, GL_SHININESS, 0);
+//            glMaterialfv(GL_FRONT, GL_SHININESS, 0);
 
 
             grid_[i][j].display3D(l/2, c/2, i==0, j==0);
@@ -245,13 +246,14 @@ void Maze::spheretrouve(){
         i_sortie = rand() % height_;
 
         if (j_sortie) // ouest
-            dir_sort = Cell::W;
+            dir_sort = Cell::E;
 
         else // est
-            dir_sort = Cell::E;
+            dir_sort = Cell::W;
     }
 
 //    qDebug() << i_sortie << j_sortie;
+//    qDebug() << dir_sort;
 
     grid_[i_sortie][j_sortie].setFrontier(dir_sort, 0);
 }
@@ -275,11 +277,11 @@ bool Maze::gestionPos(double pos_x, double pos_y){
             case Cell::N:
             if (pos_x > (i_sortie * c - c/2) && pos_x < (i_sortie * c) &&
                 pos_y > (j_sortie * c - c/2 + l) && pos_y < (j_sortie * c + c/2 - l)){
-                // call victoire
+                victoire = true;
                 //A faire: Ajout de message de victoire : PB Pas de signal (car objet pas derivé de la classe QObject!!!
                 //+gestion de changement de parametres. - Ajouter une fonction?
-                init(l, c, width_, height_);
-                generate();
+//                init(l, c, width_, height_);
+//                generate();
 
                 return false;
             }
@@ -288,7 +290,7 @@ bool Maze::gestionPos(double pos_x, double pos_y){
             case Cell::S:
             if (pos_x > (i_sortie * c) && pos_x < (i_sortie * c + c/2) &&
                 pos_y > (j_sortie * c - c/2 + l) && pos_y < (j_sortie * c + c/2 - l)){
-                // call victoire
+                victoire = true;
                 return false;
             }
             break;
@@ -296,7 +298,7 @@ bool Maze::gestionPos(double pos_x, double pos_y){
             case Cell::E:
             if (pos_x > (i_sortie * c - c/2 + l) && pos_x < (i_sortie * c + c/2 - l) &&
                 pos_y > (j_sortie * c) && pos_y < (j_sortie * c + c/2)){
-                // call victoire
+                victoire = true;
                 return false;
             }
             break;
@@ -304,7 +306,7 @@ bool Maze::gestionPos(double pos_x, double pos_y){
             case Cell::W:
             if (pos_x > (i_sortie * c - c/2 + l) && pos_x < (i_sortie * c + c/2 - l) &&
                 pos_y > (j_sortie * c - c/2) && pos_y < (j_sortie * c)){
-                // call victoire
+                victoire = true;
                 return false;
             }
             break;

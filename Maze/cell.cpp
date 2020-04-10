@@ -137,26 +137,26 @@ void Cell::display3D(float l, float c, bool ignore_S, bool ignore_E){
 
 
 // Gestion de la Lumière
-        GLfloat colorAmbient[] = { 0.3, 0.3, 0.3,1.0 };
-        glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE, colorAmbient);
-        GLfloat couleurLmp_tab[] = {1.0,1.0,1.0, 1.0};
-        glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION, couleurLmp_tab);
-        glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE, couleurLmp_tab);
+//        GLfloat colorAmbient[] = { 0.3, 0.3, 0.3,1.0 };
+//        glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE, colorAmbient);
+//        GLfloat couleurLmp_tab[] = {1.0,1.0,1.0, 1.0};
+//        glMaterialfv(GL_FRONT_AND_BACK,GL_EMISSION, couleurLmp_tab);
+//        glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE, couleurLmp_tab);
 
 
-        //GLfloat ambient[] = { 0.2, 0.0, 0.0 };
-        //glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+        GLfloat ambient[] = { 0.2, 0.0, 0.0 };
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
 
-        //GLfloat emission[] = { 0.2, 0.2, 0.2 };
-        //glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
+        GLfloat emission[] = { 0.2, 0.2, 0.2 };
+        glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, emission);
 
-        //GLfloat diffuse[] = { 0.0, 0.0, 0.0 };
-        //glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+        GLfloat diffuse[] = { 0.0, 0.0, 0.0 };
+        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
 
 // ///////////////
 
-        //QString filename(":/telecom_logo_quadri_longueur.png");
-        QString filename(":/terre.jpg");
+        QString filename(":/telecom_logo_quadri_longueur.png");
+//        QString filename(":/terre.jpg");
         QImage image = QGLWidget::convertToGLFormat(QImage(filename)); // Charge une image et la convertit en un format attendu par les fonctions d’OpenGL
         glBindTexture( GL_TEXTURE_2D, texture); // Définit la texture courante
         glTexImage2D( // Transmet à OpenGL toutes les caractéristiques de la texture courante : largeur, hauteur, format, etc... et bien sûr l'image
