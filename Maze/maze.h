@@ -36,6 +36,7 @@ class Maze
 
 public:
     Maze(int width = 10,int height = 6);
+    ~Maze();
     int getWidth(){return width_;};
     int getHeight(){return height_;};
     void reinit(int width = 10,int height = 6);

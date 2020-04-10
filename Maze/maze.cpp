@@ -1,3 +1,4 @@
+
 /** An implementation of Prim's algorithm for generating mazes.
  * from <http://weblog.jamisbuck.org/2011/1/10/maze-generation-prim-s-algorithm>
  *
@@ -15,7 +16,12 @@ using namespace std;
 Maze::Maze(int width, int height)
     : grid_(height,vector<Cell>(width)), width_(width), height_(height)
 {
-
+ cout<<"test"<<endl;
+ Cell::E;
+  cout<<"FinTest"<<endl;
+}
+Maze::~Maze(){
+qDebug()<<"destruction de Maze";
 }
 
 void Maze::reinit(int width, int height)

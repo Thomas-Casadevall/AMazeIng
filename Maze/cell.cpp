@@ -11,7 +11,7 @@ Cell::Cell(){
 }
 
 Cell::~Cell(){
-
+qDebug()<<"destruction de Cell";
     if(sphere)
         gluDeleteQuadric(quad);
 }
@@ -162,7 +162,7 @@ void Cell::setSphere(){
 }
 
 void Cell::unsetSphere(){
-
+    qDebug()<<"destruction de sphere";
     sphere = 0;
     gluDeleteQuadric(quad);
 
