@@ -233,12 +233,14 @@ void Maze::spheretrouve(){
         j_sortie = (width_ - 1) * (rand() % 2);
         i_sortie = rand() % height_;
 
-        if (i_sortie) // ouest
+        if (j_sortie) // ouest
             dir_sort = Cell::W;
 
         else // est
             dir_sort = Cell::E;
     }
+
+//    qDebug() << i_sortie << j_sortie;
 
     grid_[i_sortie][j_sortie].setFrontier(dir_sort, 0);
 }
@@ -261,33 +263,40 @@ bool Maze::gestionPos(double pos_x, double pos_y){
         switch (dir_sort) {
             case Cell::N:
             if (pos_x > (i_sortie * c - c/2) && pos_x < (i_sortie * c) &&
-                pos_y > (j_sortie * c - c/2 + l) && pos_y < (j_sortie * c + c/2 - l))
+                pos_y > (j_sortie * c - c/2 + l) && pos_y < (j_sortie * c + c/2 - l)){
                 // call victoire
+                return false;
+            }
             break;
 
             case Cell::S:
             if (pos_x > (i_sortie * c) && pos_x < (i_sortie * c + c/2) &&
-                pos_y > (j_sortie * c - c/2 + l) && pos_y < (j_sortie * c + c/2 - l))
+                pos_y > (j_sortie * c - c/2 + l) && pos_y < (j_sortie * c + c/2 - l)){
                 // call victoire
+                return false;
+            }
             break;
 
             case Cell::E:
             if (pos_x > (i_sortie * c - c/2 + l) && pos_x < (i_sortie * c + c/2 - l) &&
-                pos_y > (j_sortie * c) && pos_y < (j_sortie * c + c/2))
+                pos_y > (j_sortie * c) && pos_y < (j_sortie * c + c/2)){
                 // call victoire
+                return false;
+            }
             break;
 
             case Cell::W:
             if (pos_x > (i_sortie * c - c/2 + l) && pos_x < (i_sortie * c + c/2 - l) &&
-                pos_y > (j_sortie * c - c/2) && pos_y < (j_sortie * c))
+                pos_y > (j_sortie * c - c/2) && pos_y < (j_sortie * c)){
                 // call victoire
+                return false;
+            }
             break;
 
         }
 
     }
 
-    qDebug() << round(pos_x/c) << round(pos_y/c);
 
     // si on sort de la map
     if (pos_x <= (-c/2 + l) || pos_x >= (c*height_ - c/2 - l) ||

@@ -126,7 +126,7 @@ void MazeWidget::paintGL()
     // -- Definition de la matrice modelview
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(80.0f, ((float)width)/height, 0.1f, 20.0f);
+    gluPerspective(80.0f, ((float)width)/height, 0.1f, 50.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -183,7 +183,14 @@ void MazeWidget::paintGL()
     glVertex3f(- c/2, -1.0f, - c/2);
 
 
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_plaf_emission);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, light_plaf_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, light_plaf_diffuse);
 
+    glVertex3f(- c/2, 1.0f, laby.getWidth() * c - c/2);
+    glVertex3f(laby.getHeight() * c - c/2, 1.0f, laby.getWidth() * c - c/2);
+    glVertex3f(laby.getHeight() * c - c/2, 1.0f, - c/2);
+    glVertex3f(- c/2, 1.0f, - c/2);
 
 
     glEnd();
@@ -252,7 +259,7 @@ void MazeWidget::keyPressEventCall(QKeyEvent * event)
 
 //    qDebug() << angleVue;
 
-    qDebug() << pos_x << pos_z;
+//    qDebug() << pos_x << pos_z;
 }
 
 void MazeWidget::updateView(char command){
@@ -263,6 +270,7 @@ void MazeWidget::updateView(char command){
         if (laby.gestionPos(pos_x + angle2x(), pos_z + angle2z())){
             pos_x += angle2x();
             pos_z += angle2z();
+            repaint();
         }
     break;
 
@@ -270,6 +278,7 @@ void MazeWidget::updateView(char command){
         if (laby.gestionPos(pos_x - angle2x(), pos_z - angle2z())){
             pos_x -= angle2x();
             pos_z -= angle2z();
+            repaint();
         }
     break;
 
@@ -278,6 +287,7 @@ void MazeWidget::updateView(char command){
             angleVue = 360 - PAS_VUE + angleVue;
         else
             angleVue-=PAS_VUE;
+        repaint();
     break;
 
     case 'r':
@@ -285,6 +295,7 @@ void MazeWidget::updateView(char command){
             angleVue = 360 + PAS_VUE - angleVue;
         else
             angleVue+=PAS_VUE;
+        repaint();
     break;
 
     case '0':
@@ -294,8 +305,6 @@ void MazeWidget::updateView(char command){
         qDebug() << "error";
     break;
     }
-
-    repaint();
 
 }
 
