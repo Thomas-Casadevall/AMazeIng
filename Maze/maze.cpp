@@ -9,12 +9,21 @@
 #include <ctime>
 #include "cell.h"
 #include "maze.h"
+#include <math.h>
 
 using namespace std;
 
 Maze::Maze(int width, int height)
     : grid_(height,vector<Cell>(width)), width_(width), height_(height)
 {
+
+}
+
+void Maze::init(float l_, float c_, int width, int height){
+    l = l_;
+    c = c_;
+    width_ = width;
+    height_ = height;
 
 }
 
@@ -152,14 +161,11 @@ void Maze::generate(bool show)
 
     i_sphere = rand() % (height_ - 1) + 1; // (height_ - 1) + 1 pour éviter qu'elle soit en 0,0
     j_sphere = rand() % (width_ - 1) + 1;
-    qDebug() << "sphere";
-    qDebug() << i_sphere;
-    qDebug() << j_sphere;
 
     grid_[i_sphere][j_sphere].setSphere();
 }
 
-void Maze::display3D(float l, float c){
+void Maze::display3D(){
 
     GLfloat light_ambient[] = { 0.2, 0.2, 0.2 };
     GLfloat light_diffuse[] = { 0.6, 0.6, 0.6 };
@@ -177,111 +183,12 @@ void Maze::display3D(float l, float c){
             glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, light_ambient);
             glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_diffuse);
 
-            grid_[i][j].display3D(l/2, c/2, i==height_-1, j==width_-1);
+            grid_[i][j].display3D(l/2, c/2, i==0, j==0);
 
             glPopMatrix();
         }
 
     }
-
-
-    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_emission);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, light_ambient);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_diffuse);
-
-
-    // Murs exté
-
-    glBegin(GL_QUADS);
-
-//    glColor3ub(0,0,255);    //bleu
-
-    // Mur NORD
-    if (i_sortie == 0){
-        glNormal3f(1.0, 0.0, 0.0);
-        glVertex3f(-1.0f, 1.0f, -1.0f);
-        glVertex3f(-1.0f, -1.0f, -1.0f);
-        glVertex3f(-1.0f, -1.0f, j_sortie*2 - 1.0f);
-        glVertex3f(-1.0f, 1.0f, j_sortie*2 - 1.0f);
-
-        glVertex3f(-1.0f, -1.0f, (j_sortie + 1)*2 - 1.0f);
-        glVertex3f(-1.0f, 1.0f, (j_sortie + 1)*2 - 1.0f);
-        glVertex3f(-1.0f, -1.0f, width_*2 - 1.0f);
-        glVertex3f(-1.0f, 1.0f, width_*2 - 1.0f);
-    }
-    else {
-        glNormal3f(1.0, 0.0, 0.0);
-        glVertex3f(-1.0f, 1.0f, -1.0f);
-        glVertex3f(-1.0f, -1.0f, -1.0f);
-        glVertex3f(-1.0f, -1.0f, width_*2 - 1.0f);
-        glVertex3f(-1.0f, 1.0f, width_*2 - 1.0f);
-    }
-
-    // Mur SUD
-    if (i_sortie == height_ - 1){
-        glNormal3f(-1.0, 0.0, 0.0);
-        glVertex3f(height_*2 - 1.0, 1.0f, -1.0f);
-        glVertex3f(height_*2 - 1.0, -1.0f, -1.0f);
-        glVertex3f(height_*2 - 1.0, -1.0f, j_sortie*2 - 1.0f);
-        glVertex3f(height_*2 - 1.0, 1.0f, j_sortie*2 - 1.0f);
-
-        glVertex3f(height_*2 - 1.0, -1.0f, (j_sortie + 1)*2 - 1.0f);
-        glVertex3f(height_*2 - 1.0, 1.0f, (j_sortie + 1)*2 - 1.0f);
-        glVertex3f(height_*2 - 1.0, -1.0f, width_*2 - 1.0f);
-        glVertex3f(height_*2 - 1.0, 1.0f, width_*2 - 1.0f);
-    }
-    else {
-        glNormal3f(-1.0, 0.0, 0.0);
-        glVertex3f(height_*2 - 1.0, 1.0f, -1.0f);
-        glVertex3f(height_*2 - 1.0, -1.0f, -1.0f);
-        glVertex3f(height_*2 - 1.0, -1.0f, width_*2 - 1.0f);
-        glVertex3f(height_*2 - 1.0, 1.0f, width_*2 - 1.0f);
-    }
-
-
-    // Mur EST
-    if (j_sortie == 0){
-        glNormal3f(0.0, 0.0, 1.0);
-        glVertex3f(-1.0f, 1.0f, -1.0f);
-        glVertex3f(-1.0f, -1.0f, -1.0f);
-        glVertex3f(i_sortie*2 - 1.0, -1.0f, -1.0f);
-        glVertex3f(i_sortie*2 - 1.0, 1.0f, -1.0f);
-
-        glVertex3f((i_sortie + 1)*2 - 1.0, -1.0f, -1.0f);
-        glVertex3f((i_sortie + 1)*2 - 1.0, 1.0f, -1.0f);
-        glVertex3f(height_*2 - 1.0, -1.0f, -1.0f);
-        glVertex3f(height_*2 - 1.0, 1.0f, -1.0f);
-    }
-    else {
-        glNormal3f(0.0, 0.0, 1.0);
-        glVertex3f(-1.0f, 1.0f, -1.0f);
-        glVertex3f(-1.0f, -1.0f, -1.0f);
-        glVertex3f(height_*2 - 1.0, -1.0f, -1.0f);
-        glVertex3f(height_*2 - 1.0, 1.0f, -1.0f);
-    }
-
-    // Mur OUEST
-    if (j_sortie == width_ -1){
-        glNormal3f(0.0, 0.0, -1.0);
-        glVertex3f(-1.0f, 1.0f, width_*2 - 1.0f);
-        glVertex3f(-1.0f, -1.0f, width_*2 - 1.0f);
-        glVertex3f(i_sortie*2 - 1.0, -1.0f, width_*2 - 1.0f);
-        glVertex3f(i_sortie*2 - 1.0, 1.0f, width_*2 - 1.0f);
-
-        glVertex3f((i_sortie + 1)*2 - 1.0, -1.0f, width_*2 - 1.0f);
-        glVertex3f((i_sortie + 1)*2 - 1.0, 1.0f, width_*2 - 1.0f);
-        glVertex3f(height_*2 - 1.0, -1.0f, width_*2 - 1.0f);
-        glVertex3f(height_*2 - 1.0, 1.0f, width_*2 - 1.0f);
-    }
-    else {
-        glNormal3f(0.0, 0.0, -1.0);
-        glVertex3f(-1.0f, 1.0f, width_*2 - 1.0f);
-        glVertex3f(-1.0f, -1.0f, width_*2 - 1.0f);
-        glVertex3f(height_*2 - 1.0, -1.0f, width_*2 - 1.0f);
-        glVertex3f(height_*2 - 1.0, 1.0f, width_*2 - 1.0f);
-    }
-
-    glEnd();
 
 }
 
@@ -309,24 +216,97 @@ void Maze::spheretrouve(){
 
     grid_[i_sphere][j_sphere].unsetSphere();
 
-    if (rand() % 1){
-        i_sortie = (height_ - 1) * (rand() % 1);
+    // nord ou sud
+    if (rand() % 2){
+        i_sortie = (height_ - 1) * (rand() % 2);
         j_sortie = rand() % width_;
+
+        if (i_sortie) // sud
+            dir_sort = Cell::S;
+
+        else // nord
+            dir_sort = Cell::N;
+
     }
+    // est ou ouest
     else {
-        j_sortie = (width_ - 1) * (rand() % 1);
+        j_sortie = (width_ - 1) * (rand() % 2);
         i_sortie = rand() % height_;
+
+        if (i_sortie) // ouest
+            dir_sort = Cell::W;
+
+        else // est
+            dir_sort = Cell::E;
     }
 
+    grid_[i_sortie][j_sortie].setFrontier(dir_sort, 0);
 }
 
 
-void Maze::gestionPos(double pos_x, double pos_y){
+bool Maze::gestionPos(double pos_x, double pos_y){
 
     // Sphere
-    if (pos_x > (i_sphere * 2 - 0.8) && pos_x < (i_sphere * 2 + 0.8) &&
-        pos_y > (j_sphere * 2 - 0.8) && pos_y < (j_sphere * 2 + 0.8)    )
+    if (pos_x > (i_sphere * c - 0.4*c) && pos_x < (i_sphere * c + 0.4*c) &&
+        pos_y > (j_sphere * c - 0.4*c) && pos_y < (j_sphere * c + 0.4*c)){
+
         spheretrouve();
 
+        i_sphere = -1;
+        j_sphere = -1;
+    }
+
+    // victoire
+    if (i_sortie >= 0){
+        switch (dir_sort) {
+            case Cell::N:
+            if (pos_x > (i_sortie * c - c/2) && pos_x < (i_sortie * c) &&
+                pos_y > (j_sortie * c - c/2 + l) && pos_y < (j_sortie * c + c/2 - l))
+                // call victoire
+            break;
+
+            case Cell::S:
+            if (pos_x > (i_sortie * c) && pos_x < (i_sortie * c + c/2) &&
+                pos_y > (j_sortie * c - c/2 + l) && pos_y < (j_sortie * c + c/2 - l))
+                // call victoire
+            break;
+
+            case Cell::E:
+            if (pos_x > (i_sortie * c - c/2 + l) && pos_x < (i_sortie * c + c/2 - l) &&
+                pos_y > (j_sortie * c) && pos_y < (j_sortie * c + c/2))
+                // call victoire
+            break;
+
+            case Cell::W:
+            if (pos_x > (i_sortie * c - c/2 + l) && pos_x < (i_sortie * c + c/2 - l) &&
+                pos_y > (j_sortie * c - c/2) && pos_y < (j_sortie * c))
+                // call victoire
+            break;
+
+        }
+
+    }
+
+    qDebug() << round(pos_x/c) << round(pos_y/c);
+
+    // si on sort de la map
+    if (pos_x <= (-c/2 + l) || pos_x >= (c*height_ - c/2 - l) ||
+        pos_y <= (-c/2 + l) || pos_y >= (c*width_ - c/2 - l))
+        return false;
+
+     //colisions
+    for (int i=0;i<height_-1;i++) {
+        if (pos_x >= (i * c + c/2 - l) && pos_x <= (i * c + c/2 + l))
+            if (grid_[i][(round(pos_y/c))].isFrontier(Cell::S))
+                return false;
+    }
+
+    for (int j=0;j<width_-1;j++) {
+        if (pos_y >= (j * c + c/2 - l) && pos_y <= (j * c + c/2 + l))
+            if (grid_[(round(pos_x/c))][j].isFrontier(Cell::E))
+                return false;
+    }
+
+    return true;
 
 }

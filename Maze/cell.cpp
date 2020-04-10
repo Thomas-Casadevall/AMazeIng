@@ -11,7 +11,6 @@ Cell::Cell(){
 }
 
 Cell::~Cell(){
-
     if(sphere)
         gluDeleteQuadric(quad);
 }
@@ -21,11 +20,7 @@ void Cell::display3D(float l, float c, bool ignore_S, bool ignore_E){
 
     glBegin(GL_QUADS);
 
-//    glColor3ub(r, g, b);
-
-    if (isFrontier(S) && !ignore_S){
-
-//        glColor3ub(255,255,255);    //vert
+    if (isFrontier(S)/* && !ignore_S*/){
 
         glNormal3f(-1.0, 0.0, 0.0);
         glVertex3f(c - l, 1.0f, -(c + l - 0.0001));
@@ -52,33 +47,85 @@ void Cell::display3D(float l, float c, bool ignore_S, bool ignore_E){
         glVertex3f(c + l, 1.0f, c + l - 0.0001);
     }
 
-    if (isFrontier(E) && !ignore_E){
-
-//        glColor3ub(255,255,255);    // blanc
-
-        glNormal3f(0.0, 0.0, -1.0);
-        glVertex3f(-(c + l - 0.0001), 1.0f, c - l);
-        glVertex3f(-(c + l - 0.0001), -1.0f, c - l);
-        glVertex3f(c + l - 0.0001, -1.0f, c - l);
-        glVertex3f(c + l - 0.0001, 1.0f, c - l);
+    if (isFrontier(E)/* && !ignore_E*/){
 
         glNormal3f(0.0, 0.0, 1.0);
+        glVertex3f(-(c + l - 0.0001), 1.0f, c - l);
+        glVertex3f(-(c + l - 0.0001), -1.0f, c - l);
+        glVertex3f(c + l - 0.0001, -1.0f, c - l);
+        glVertex3f(c + l - 0.0001, 1.0f, c - l);
+
+        glNormal3f(0.0, 0.0, -1.0);
         glVertex3f(-(c + l - 0.0001), 1.0f, c + l);
         glVertex3f(-(c + l - 0.0001), -1.0f, c + l);
         glVertex3f(c + l - 0.0001, -1.0f, c + l);
         glVertex3f(c + l - 0.0001, 1.0f, c + l);
 
-        glNormal3f(-1.0, 0.0, 0.0);
+        glNormal3f(1.0, 0.0, 0.0);
         glVertex3f(-(c + l - 0.0001), 1.0f, c + l);
         glVertex3f(-(c + l - 0.0001), -1.0f, c + l);
         glVertex3f(-(c + l - 0.0001), -1.0f, c - l);
         glVertex3f(-(c + l - 0.0001), 1.0f, c - l);
 
-        glNormal3f(1.0, 0.0, 0.0);
+        glNormal3f(-1.0, 0.0, 0.0);
         glVertex3f(c + l - 0.0001, 1.0f, c + l);
         glVertex3f(c + l - 0.0001, -1.0f, c + l);
         glVertex3f(c + l - 0.0001, -1.0f, c - l);
         glVertex3f(c + l - 0.0001, 1.0f, c - l);
+    }
+
+    if (isFrontier(N) && ignore_S){
+
+        glNormal3f(1.0, 0.0, 0.0);
+        glVertex3f(-(c - l), 1.0f, -(c + l - 0.0001));
+        glVertex3f(-(c - l), -1.0f, -(c + l - 0.0001));
+        glVertex3f(-(c - l), -1.0f, c + l - 0.0001);
+        glVertex3f(-(c - l), 1.0f, c + l - 0.0001);
+
+        glNormal3f(-1.0, 0.0, 0.0);
+        glVertex3f(-(c + l), 1.0f, -(c + l - 0.0001));
+        glVertex3f(-(c + l), -1.0f, -(c + l - 0.0001));
+        glVertex3f(-(c + l), -1.0f, c + l - 0.0001);
+        glVertex3f(-(c + l), 1.0f, c + l - 0.0001);
+
+        glNormal3f(0.0, 0.0, 1.0);
+        glVertex3f(-(c - l), 1.0f, -(c + l - 0.0001));
+        glVertex3f(-(c - l), -1.0f, -(c + l - 0.0001));
+        glVertex3f(-(c + l), -1.0f, -(c + l - 0.0001));
+        glVertex3f(-(c + l), 1.0f, -(c + l - 0.0001));
+
+        glNormal3f(0.0, 0.0, -1.0);
+        glVertex3f(-(c - l), 1.0f, c + l - 0.0001);
+        glVertex3f(-(c - l), -1.0f, c + l - 0.0001);
+        glVertex3f(-(c + l), -1.0f, c + l - 0.0001);
+        glVertex3f(-(c + l), 1.0f, c + l - 0.0001);
+    }
+
+    if (isFrontier(W) && ignore_E){
+
+        glNormal3f(0.0, 0.0, -1.0);
+        glVertex3f(-(c + l - 0.0001), 1.0f, -(c - l));
+        glVertex3f(-(c + l - 0.0001), -1.0f, -(c - l));
+        glVertex3f(c + l - 0.0001, -1.0f, -(c - l));
+        glVertex3f(c + l - 0.0001, 1.0f, -(c - l));
+
+        glNormal3f(0.0, 0.0, 1.0);
+        glVertex3f(-(c + l - 0.0001), 1.0f, -(c + l));
+        glVertex3f(-(c + l - 0.0001), -1.0f, -(c + l));
+        glVertex3f(c + l - 0.0001, -1.0f, -(c + l));
+        glVertex3f(c + l - 0.0001, 1.0f, -(c + l));
+
+        glNormal3f(-1.0, 0.0, 0.0);
+        glVertex3f(-(c + l - 0.0001), 1.0f, -(c + l));
+        glVertex3f(-(c + l - 0.0001), -1.0f, -(c + l));
+        glVertex3f(-(c + l - 0.0001), -1.0f, -(c - l));
+        glVertex3f(-(c + l - 0.0001), 1.0f, -(c - l));
+
+        glNormal3f(1.0, 0.0, 0.0);
+        glVertex3f(c + l - 0.0001, 1.0f, -(c + l));
+        glVertex3f(c + l - 0.0001, -1.0f, -(c + l));
+        glVertex3f(c + l - 0.0001, -1.0f, -(c - l));
+        glVertex3f(c + l - 0.0001, 1.0f, -(c - l));
     }
 
     glEnd();
@@ -102,9 +149,6 @@ void Cell::display3D(float l, float c, bool ignore_S, bool ignore_E){
         gluQuadricDrawStyle(quad, GLU_FILL);
 
         gluSphere(quad, 0.7, 20, 20);
-
-//        GLfloat light2_position[] = { 0.0, 0.0, 0.0, 1.0 };
-//        glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
 
     }
 }
@@ -164,6 +208,6 @@ void Cell::setSphere(){
 void Cell::unsetSphere(){
 
     sphere = 0;
-    gluDeleteQuadric(quad);
+//    gluDeleteQuadric(quad);
 
 }

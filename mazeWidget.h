@@ -56,13 +56,15 @@ private:
     int width, height;
 
     // largeur des murs et d'un cellule
-    float l = 0.1, c = 2;
+    float l = 0.2, c = 3;
 
     int angleVue = 0;
     double pos_x = 0, pos_y = 0, pos_z = 0;
     double y = 0;
 
     Maze laby;
+    int width_l = 10, height_l = 6;
+
     MiniMap *miniMap;
 
     QGraphicsOpacityEffect * effect;

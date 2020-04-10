@@ -28,17 +28,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->maze, &MazeWidget::onArrete, [&] {exit(0);});
 
 
-//    // Camera setup
-//    webCam_ =new cv::VideoCapture(0);
-//    width = webCam_->get(CAP_PROP_FRAME_WIDTH);
-//    height= webCam_->get(CAP_PROP_FRAME_HEIGHT);
-//    ui->imageLabel_->setText("L'image va bientôt s'afficher, veuillez patienter!");
-//    ui->statutLabel_->setText("Démarrage...");
+    // Camera setup
+    webCam_ =new cv::VideoCapture(0);
+    width = webCam_->get(CAP_PROP_FRAME_WIDTH);
+    height= webCam_->get(CAP_PROP_FRAME_HEIGHT);
+    ui->imageLabel_->setText("L'image va bientôt s'afficher, veuillez patienter!");
+    ui->statutLabel_->setText("Démarrage...");
 
 
-//    //
-//    props = new Properties (webCam_);
-//    initCV();
+    //
+    props = new Properties (webCam_);
+    initCV();
 
 }
 
