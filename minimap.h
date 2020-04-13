@@ -6,6 +6,8 @@
 #include <Maze/cell.h>
 #include <Maze/maze.h>
 
+
+// Auteur : Thomas Casadevall
 class MiniMap : public QWidget
 {
     Q_OBJECT

@@ -17,6 +17,7 @@
 
 
 // Classe dediee a l'affichage d'une scene OpenGL
+// Auteur : Thomas Casadevall
 class MazeWidget : public QOpenGLWidget
 {
     Q_OBJECT

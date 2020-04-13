@@ -58,6 +58,8 @@ public:
     void setValue(int type) {value_=type;}
     void setFrontier(Direction d,bool state) {frontier[d]=state;}
 
+    // Auteur : les méthodes suivantes ont étées rajoutées par Thomas Casadevall
+
     /*
      * Role : enregistre la cellule comme ayant la sphere et créé un quadrique
      * Entréé : vide
@@ -89,6 +91,7 @@ public:
      * Entrée : - QPainter * dessinateur = QPainter du widget qui a appelé cette méthode, indispensable pour dessiner
      *          - int off_x = offset en x représentant le point en haud à gauche de la cellule
      *          - int off_y = offset en y représentant le point en haud à gauche de la cellule
+     * Sortie : vide
      * */
     void display2D(QPainter * dessinateur, int off_x, int off_y);
 };

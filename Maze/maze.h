@@ -60,6 +60,9 @@ public:
     int geti_sphere()const{return i_sphere;};
     int getj_sphere()const{return j_sphere;};
 
+    // Auteur : les méthodes suivantes ont étées rajoutées par Thomas Casadevall
+
+
     /*
      * Role : change la valeur des paremètres avec ceux donné en paramètre
      * Entree : - float l_ = remplace l
