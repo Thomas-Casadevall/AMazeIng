@@ -15,7 +15,7 @@
 // Declarations des constantes
 const unsigned int WIN_WIDTH    = 1600;
 const unsigned int WIN_HEIGHT   = 900;
-const unsigned int PAS_VUE      = 10;
+const unsigned int PAS_VUE      = 5;
 const double PAS_DEPLACEMENT    = 0.5;
 
 
@@ -159,10 +159,10 @@ void MazeWidget::paintGL()
     GLfloat light0_position[] = { 1.2, 1.0, 1.0, 0.0 };
     glLightfv(GL_LIGHT0, GL_POSITION, light0_position);
 
-    GLfloat light1_position[] = { 1, 1.0, 2.0, 0.0 };
+    GLfloat light1_position[] = { 1, 0.0, 2.0, 0.0 };
     glLightfv(GL_LIGHT1, GL_POSITION, light1_position);
 
-    GLfloat light2_position[] = { -1.5, 1.0, -1.5, 1.0 };
+    GLfloat light2_position[] = { -1.5, 0.0, -1.0, 0.0 };
     glLightfv(GL_LIGHT2, GL_POSITION, light2_position);
 
 
@@ -174,11 +174,11 @@ void MazeWidget::paintGL()
 
 
     // ------ Sol et plafond ------
-    GLfloat light_plaf_ambient[] = { 0.2, 0.2, 0.2 };
+    GLfloat light_plaf_ambient[] = { 0.3, 0.3, 0.3 };
     GLfloat light_plaf_diffuse[] = { 0.0, 0.0, 0.0 };
     GLfloat light_plaf_emission[] = { 0.0, 0.0, 0.0 };
 
-    GLfloat light_sol_ambient[] = { 0.5, 0.5, 0.5 };
+    GLfloat light_sol_ambient[] = { 0.3, 0.3, 0.3 };
     GLfloat light_sol_diffuse[] = { 0.0, 0.0, 0.0 };
     GLfloat light_sol_emission[] = { 0.0, 0.0, 0.0 };
 
@@ -189,8 +189,8 @@ void MazeWidget::paintGL()
 
 
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_sol_emission);
-    glMaterialfv(GL_FRONT, GL_AMBIENT, light_sol_ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, light_sol_diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, light_sol_ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_sol_diffuse);
 
     glVertex3f(- c/2, -1.0f, laby.getWidth() * c - c/2);
     glVertex3f(laby.getHeight() * c - c/2, -1.0f, laby.getWidth() * c - c/2);
@@ -198,14 +198,14 @@ void MazeWidget::paintGL()
     glVertex3f(- c/2, -1.0f, - c/2);
 
 
-//    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_plaf_emission);
-//    glMaterialfv(GL_FRONT, GL_AMBIENT, light_plaf_ambient);
-//    glMaterialfv(GL_FRONT, GL_DIFFUSE, light_plaf_diffuse);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, light_plaf_emission);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, light_plaf_ambient);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, light_plaf_diffuse);
 
-//    glVertex3f(- c/2, 1.0f, laby.getWidth() * c - c/2);
-//    glVertex3f(laby.getHeight() * c - c/2, 1.0f, laby.getWidth() * c - c/2);
-//    glVertex3f(laby.getHeight() * c - c/2, 1.0f, - c/2);
-//    glVertex3f(- c/2, 1.0f, - c/2);
+    glVertex3f(- c/2, 1.0f, laby.getWidth() * c - c/2);
+    glVertex3f(laby.getHeight() * c - c/2, 1.0f, laby.getWidth() * c - c/2);
+    glVertex3f(laby.getHeight() * c - c/2, 1.0f, - c/2);
+    glVertex3f(- c/2, 1.0f, - c/2);
 
 
     glEnd();
