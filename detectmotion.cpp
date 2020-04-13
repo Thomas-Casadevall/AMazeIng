@@ -31,7 +31,7 @@ Properties::~Properties(){
 
 void Properties::CheckMove(Point vecteur){
     if (abs(vecteur.x)>abs(vecteur.y)){
-        if (abs(vecteur.x)<60 && abs(vecteur.x)>20 ){
+        if (abs(vecteur.x)<60 && abs(vecteur.x)>25 ){
             flagMajMaze = 1;
             if (vecteur.x>0){
                 //std::cout<<"gauche"<<std::endl;
@@ -47,7 +47,7 @@ void Properties::CheckMove(Point vecteur){
 
     }
     else if (abs(vecteur.x)<abs(vecteur.y)){
-        if (abs(vecteur.y)<60 && abs(vecteur.y)>20 ){
+        if (abs(vecteur.y)<60 && abs(vecteur.y)>15 ){
             flagMajMaze = 1;
             if (vecteur.y>0){
                 //std::cout<<"bas"<<std::endl;

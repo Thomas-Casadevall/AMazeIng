@@ -144,7 +144,7 @@ void Cell::display3D(float l, float c, bool ignore_S, bool ignore_E){
 //        glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE, couleurLmp_tab);
 
 
-        GLfloat ambient[] = { 0.2, 0.0, 0.0 };
+        GLfloat ambient[] = { 1., 0.0, 0.0 };
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
 
         GLfloat emission[] = { 0.2, 0.2, 0.2 };
