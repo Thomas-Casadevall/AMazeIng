@@ -9,7 +9,7 @@
 //using namespace cv;
 
 
-class Properties{
+class Properties{ // Entierement réalisé par Matthieu Poulain
 
 public:
     Properties(cv::VideoCapture * webCam_); //Constructeur

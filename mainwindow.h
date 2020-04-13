@@ -32,18 +32,18 @@ public:
     std::mutex mutx; // Implanté mais non utilisé puisque le programme n'est pas prévu pour renvoyer de sortie sur la console
 
 private slots:
-    void updateCV(); // Mise a jour de la detection de visage
-    void initCV(); //Initialisation de la detection de visage
-    void on_pushButton_clicked(); // Bouton de ré-initialisation de la detection de visage
-    int startMultiThreadProcess(std::mutex &m); // Fonction de multi-threading, actualisant en parallèle la detection de visage sous OpenCV et l'affichage du labyrinthe lorsqu'une mise à jour est necessaire.
+    void updateCV(); // Matthieu Poulain // Mise a jour de la detection de visage
+    void initCV(); // Matthieu Poulain // Initialisation de la detection de visage
+    void on_pushButton_clicked(); // Matthieu Poulain // Bouton de ré-initialisation de la detection de visage
+    int startMultiThreadProcess(std::mutex &m); // Matthieu Poulain // Fonction de multi-threading, actualisant en parallèle la detection de visage sous OpenCV et l'affichage du labyrinthe lorsqu'une mise à jour est necessaire.
 
 
 signals:
-    void updateGLWidget(char a); // Signal de declenchement de la mise a jour de l'affichage du labyrinthe.
+    void updateGLWidget(char a); // Thomas Casadevall // Signal de declenchement de la mise a jour de l'affichage du labyrinthe.
 
 protected:
     // Fonction de gestion d'interactions clavier
-    void keyPressEvent(QKeyEvent * event);
+    void keyPressEvent(QKeyEvent * event); // Thomas Casadevall //
 
 private:
     Ui::MainWindow *ui;
@@ -64,7 +64,7 @@ private:
 
 
 
-QString calculTempsDeJeu(QDateTime startTime);
+QString calculTempsDeJeu(QDateTime startTime);  // Matthieu Poulain // Mise en place du chronometre du temps de jeu.
 
 
 #endif // MAINWINDOW_H
